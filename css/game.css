@@ -1,15 +1,23 @@
-body{
+body {
     margin: 0;
     padding: 0;
 }
 
-#game-field{
+#game-field {
     display: none;
     width: 960px;
     height: 640px;
     border: 2px solid black;
 }
- 
-button{
-     background-color: #ffd800;
- }
+
+button {
+    background-color: #ffd800;
+}
+
+#back-button {
+    display: none;
+}
+
+#high-score{
+    display: none;
+}
