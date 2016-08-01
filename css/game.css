@@ -1,0 +1,15 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+#game-field{
+    display: none;
+    width: 960px;
+    height: 640px;
+    border: 2px solid black;
+}
+ 
+button{
+     background-color: #ffd800;
+ }

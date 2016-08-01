@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Project Hephaestus</title>
+    <title>Space Impact</title>
     <link rel="stylesheet" href="css/game.css">
 </head>
 <body>
     <div>
-        <canvas class="canvas-game"></canvas>
+        <canvas id="game-field" class="canvas"></canvas>
     </div>
+
+    <div id="wrapper">
+        <button id="start-button">Start</button>
+        <button id="high-score">High Score</button>
+    </div>
+
+    <script src="js/game-factory.js"></script>
+    <script src="js/game-engine.js"></script>
+    <script src="js/game-start.js"></script>
 </body>
 </html>
