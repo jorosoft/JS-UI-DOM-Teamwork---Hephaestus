@@ -7,6 +7,7 @@ var HighScoreButton = document.getElementById("high-score-button");
 function showCanvas() {
     gameField.style.display = "block";
     //gogo();
+    gameInit();
 }
 
 function showHighScore() {

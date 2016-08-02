@@ -1,11 +1,47 @@
-
 var gameField = document.getElementById("game-field");
 var ctx = gameField.getContext("2d");
 
+var xPositionPlayer = 50,
+    yPositionPlayer = 50;
+
 function gameInit() {
 
-    //
-    
+    var player = Object.create(Player).create('Vesko');
+    player.direction(ctx, xPositionPlayer, yPositionPlayer);
+
+    window.document.body.addEventListener('keydown', function(key) {
+        switch (key.keyCode) {
+            case 32:
+                //doto fire
+                break;
+            case 37:
+                xPositionPlayer -= 10;
+                ctx.clearRect(0, 0, gameField.width, gameField.height);
+                player.direction(ctx, xPositionPlayer, yPositionPlayer);
+                break;
+
+            case 38:
+                yPositionPlayer -= 10;
+                ctx.clearRect(0, 0, gameField.width, gameField.height);
+                player.direction(ctx, xPositionPlayer, yPositionPlayer);
+                break;
+
+            case 39:
+                xPositionPlayer += 10;
+                ctx.clearRect(0, 0, gameField.width, gameField.height);
+                player.direction(ctx, xPositionPlayer, yPositionPlayer);
+                break;
+            case 40:
+                yPositionPlayer += 10;
+                ctx.clearRect(0, 0, gameField.width, gameField.height);
+                player.direction(ctx, xPositionPlayer, yPositionPlayer);
+                break;
+
+            default:
+                break;
+        }
+    });
+
 }
 
 
