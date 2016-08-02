@@ -9,7 +9,7 @@ var Player = (function() {
 
     Object.defineProperty(player, 'create', {
         value: function(name) {
-            this.name = name;
+            this._name = name;
             this.live = 100;
             this.attack = 100;
             this.score = 0;
