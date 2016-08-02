@@ -1,4 +1,6 @@
 body {
+    /*background-image: url("../images/space.jpg");
+    background-color: black;*/
     margin: 0;
     padding: 0;
 }
@@ -7,17 +9,27 @@ body {
     display: none;
     width: 960px;
     height: 640px;
-    border: 2px solid black;
+    border: 2px solid red;
+}
+
+#wrapper {
+    text-align: center;
 }
 
 button {
-    background-color: #ffd800;
+    background-color: #ff0000;
 }
 
 #back-button {
     display: none;
 }
 
-#high-score{
+#high-score {
+    color: white;
     display: none;
+}
+
+h1 {
+    text-align: center;
+    color: white;
 }
