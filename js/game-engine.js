@@ -1,7 +1,10 @@
 
 var gameField = document.getElementById("game-field");
 var ctx = gameField.getContext("2d");
-
+var ship = new Image();
+ship.src = "images/ship.png";
+var bullet = new Image();
+bullet.src = "images/bullet.png"
 function gameInit() {
 
     //
@@ -64,11 +67,19 @@ function projectile(x, y) {
 function drawShip(x, y) {
     console.log(x, y);
     ctx.clearRect(x - 50, y - 50, 150, 150); // magic number clears the space around the ship.
-    ctx.fillRect(x, y, 50, 50);
+    ctx.drawImage(ship, x, y, 50, 20);
 }
 
 function drawAttack(args) {
-    ctx.fillRect(args.x + 100, args.y + 10, 30, 30);
+    var steps = 0;
+    var i = 1;
+    function Animate() {
+        ctx.clearRect(args.x, args.y + 10, 18, 20);
+        ctx.drawImage(bullet ,args.x + 2, args.y + 10, 20, 8);
+        args.x += i;
+        window.requestAnimationFrame(Animate);
+    }
+    Animate();
 }
 
 function drawScore(args) {
