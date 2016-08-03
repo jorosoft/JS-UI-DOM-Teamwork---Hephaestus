@@ -20,28 +20,45 @@ console.log(playerStrahil);
 var enemies = [];
 var enemy1 = new enemy(200, 50);
 enemies.push(enemy1);
-window.onload = function () {
+window.onload = function() {
     drawShip(playerStrahil.directionX, playerStrahil.directionY, "player");
     drawShip(enemy1.x, enemy1.y, "enemy");
 }
 executeCommand();
+
 function executeCommand() {
-    document.body.addEventListener('keydown', function (ev) {
+    document.body.addEventListener('keydown', function(ev) {
         switch (ev.keyCode) {
             case 83:
                 moveShip(playerStrahil, "down");
+                if (RestrictionShip(playerStrahil.directionX, playerStrahil.directionY)) {
+                    playerStrahil.directionY = 120;
+                    break;
+                }
                 drawShip(playerStrahil.directionX, playerStrahil.directionY, "player");
                 break;
             case 87:
                 moveShip(playerStrahil, "up");
+                if (RestrictionShip(playerStrahil.directionX, playerStrahil.directionY)) {
+                    playerStrahil.directionY = 0;
+                    break;
+                }
                 drawShip(playerStrahil.directionX, playerStrahil.directionY, "player");
                 break;
             case 65:
                 moveShip(playerStrahil, "left");
+                if (RestrictionShip(playerStrahil.directionX, playerStrahil.directionY)) {
+                    playerStrahil.directionX = 0;
+                    break;
+                }
                 drawShip(playerStrahil.directionX, playerStrahil.directionY, "player");
                 break;
             case 68:
                 moveShip(playerStrahil, "right");
+                if (RestrictionShip(playerStrahil.directionX, playerStrahil.directionY)) {
+                    playerStrahil.directionX = 250;
+                    break;
+                }
                 drawShip(playerStrahil.directionX, playerStrahil.directionY, "player");
                 break;
             case 13:
@@ -71,11 +88,11 @@ function projectile(x, y) {
 function drawShip(x, y, type) {
     switch (type) {
         case "player":
-            ctx.clearRect(x-10,y-10,70,40); // Ship moves with 10px position per step, magic numbers clear 10px around all sides of ship at every movement.
+            ctx.clearRect(x - 10, y - 10, 70, 40); // Ship moves with 10px position per step, magic numbers clear 10px around all sides of ship at every movement.
             ctx.drawImage(shipImg, x, y, 50, 20);
             break;
         case "enemy":
-            ctx.clearRect(x-10,y-10,40,40);
+            ctx.clearRect(x - 10, y - 10, 40, 40);
             ctx.drawImage(enemyImg, x, y, 20, 20);
             break;
     }
@@ -120,7 +137,7 @@ function moveShip(args, dir) {
 }
 
 function projectileHit(enemies, projectile) {
-    enemies.forEach(function (element) {
+    enemies.forEach(function(element) {
         if (projectile.x < element.x + 20 && projectile.x > element.x) // magic numbers set the range of shooting
         {
             if (projectile.y < element.y + 20 && projectile.y > element.y) // magic numbers set the y range of shooting.
@@ -132,10 +149,10 @@ function projectileHit(enemies, projectile) {
 }
 
 //For ship can't go outside on canvas.
-function Restriction(x, y) {
-    if (x >= gameField.width || x <= 0) {
+function RestrictionShip(x, y) {
+    if (x > gameField.width - 50 || x < 0) {
         return true;
-    } else if (y >= gameField.height - 20 || y <= 0) {
+    } else if (y > gameField.height - 20 || y < 0) {
         return true;
     } else {
         return false;
