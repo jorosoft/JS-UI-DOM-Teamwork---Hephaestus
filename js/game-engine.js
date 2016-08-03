@@ -2,8 +2,10 @@ var gameField = document.getElementById("game-field");
 var ctx = gameField.getContext("2d");
 var shipImg = new Image();
 shipImg.src = "images/ship.png";
+var enemyImg = new Image();
+enemyImg.src = "images/enemy.gif";
 var bullet = new Image();
-bullet.src = "images/bullet.png"
+bullet.src = "images/bullet.png";
 
 function gameInit() {
 
@@ -18,28 +20,29 @@ console.log(playerStrahil);
 var enemies = [];
 var enemy1 = new enemy(200, 50);
 enemies.push(enemy1);
-drawShip(enemy1.x, enemy1.y);
-drawScore(playerStrahil);
+window.onload = function () {
+    drawShip(playerStrahil.directionX, playerStrahil.directionY, "player");
+    drawShip(enemy1.x, enemy1.y, "enemy");
+}
 executeCommand();
-
 function executeCommand() {
-    document.body.addEventListener('keydown', function(ev) {
+    document.body.addEventListener('keydown', function (ev) {
         switch (ev.keyCode) {
             case 83:
                 moveShip(playerStrahil, "down");
-                drawShip(playerStrahil.directionX, playerStrahil.directionY);
+                drawShip(playerStrahil.directionX, playerStrahil.directionY, "player");
                 break;
             case 87:
                 moveShip(playerStrahil, "up");
-                drawShip(playerStrahil.directionX, playerStrahil.directionY);
+                drawShip(playerStrahil.directionX, playerStrahil.directionY, "player");
                 break;
             case 65:
                 moveShip(playerStrahil, "left");
-                drawShip(playerStrahil.directionX, playerStrahil.directionY);
+                drawShip(playerStrahil.directionX, playerStrahil.directionY, "player");
                 break;
             case 68:
                 moveShip(playerStrahil, "right");
-                drawShip(playerStrahil.directionX, playerStrahil.directionY);
+                drawShip(playerStrahil.directionX, playerStrahil.directionY, "player");
                 break;
             case 13:
                 var projectile1 = new projectile(playerStrahil.directionX + 50, playerStrahil.directionY); // magic number center the projectile around the ship.
@@ -65,10 +68,17 @@ function projectile(x, y) {
     this.y = y;
 }
 
-function drawShip(x, y) {
-    console.log(x, y);
-    ctx.clearRect(x - 50, y - 50, 150, 150); // magic number clears the space around the ship.
-    ctx.drawImage(shipImg, x, y, 50, 20);
+function drawShip(x, y, type) {
+    switch (type) {
+        case "player":
+            ctx.clearRect(x-10,y-10,70,40); // Ship moves with 10px position per step, magic numbers clear 10px around all sides of ship at every movement.
+            ctx.drawImage(shipImg, x, y, 50, 20);
+            break;
+        case "enemy":
+            ctx.clearRect(x-10,y-10,40,40);
+            ctx.drawImage(enemyImg, x, y, 20, 20);
+            break;
+    }
 }
 
 function drawAttack(args) {
@@ -79,8 +89,8 @@ function drawAttack(args) {
         if (args.x > gameField.width) {
             window.cancelAnimationFrame(Animate);
         } else {
-            ctx.clearRect(args.x, args.y + 10, 18, 20);
-            ctx.drawImage(bullet, args.x + 2, args.y + 10, 20, 8);
+            ctx.clearRect(args.x, args.y + 5, 22, 9);
+            ctx.drawImage(bullet, args.x + 2, args.y + 5, 20, 8);
             args.x += i;
             window.requestAnimationFrame(Animate);
         }
@@ -110,10 +120,10 @@ function moveShip(args, dir) {
 }
 
 function projectileHit(enemies, projectile) {
-    enemies.forEach(function(element) {
-        if (projectile.x < element.x + 125 && projectile.x > element.x - 125) // magic numbers set the range of shooting
+    enemies.forEach(function (element) {
+        if (projectile.x < element.x + 20 && projectile.x > element.x) // magic numbers set the range of shooting
         {
-            if (projectile.y < element.y + 20 && projectile.y > element.y - 20) // magic numbers set the y range of shooting.
+            if (projectile.y < element.y + 20 && projectile.y > element.y) // magic numbers set the y range of shooting.
             {
                 ctx.clearRect(element.x - 50, element.y - 50, 150, 150); // magic number clears the enemy;
             }
