@@ -1,10 +1,10 @@
-
 var gameField = document.getElementById("game-field");
 var ctx = gameField.getContext("2d");
-var ship = new Image();
-ship.src = "images/ship.png";
+var shipImg = new Image();
+shipImg.src = "images/ship.png";
 var bullet = new Image();
 bullet.src = "images/bullet.png"
+
 function gameInit() {
 
     //
@@ -21,8 +21,9 @@ enemies.push(enemy1);
 drawShip(enemy1.x, enemy1.y);
 drawScore(playerStrahil);
 executeCommand();
+
 function executeCommand() {
-    document.body.addEventListener('keydown', function (ev) {
+    document.body.addEventListener('keydown', function(ev) {
         switch (ev.keyCode) {
             case 83:
                 moveShip(playerStrahil, "down");
@@ -67,17 +68,22 @@ function projectile(x, y) {
 function drawShip(x, y) {
     console.log(x, y);
     ctx.clearRect(x - 50, y - 50, 150, 150); // magic number clears the space around the ship.
-    ctx.drawImage(ship, x, y, 50, 20);
+    ctx.drawImage(shipImg, x, y, 50, 20);
 }
 
 function drawAttack(args) {
     var steps = 0;
     var i = 1;
+
     function Animate() {
-        ctx.clearRect(args.x, args.y + 10, 18, 20);
-        ctx.drawImage(bullet ,args.x + 2, args.y + 10, 20, 8);
-        args.x += i;
-        window.requestAnimationFrame(Animate);
+        if (args.x > gameField.width) {
+            window.cancelAnimationFrame(Animate);
+        } else {
+            ctx.clearRect(args.x, args.y + 10, 18, 20);
+            ctx.drawImage(bullet, args.x + 2, args.y + 10, 20, 8);
+            args.x += i;
+            window.requestAnimationFrame(Animate);
+        }
     }
     Animate();
 }
@@ -104,7 +110,7 @@ function moveShip(args, dir) {
 }
 
 function projectileHit(enemies, projectile) {
-    enemies.forEach(function (element) {
+    enemies.forEach(function(element) {
         if (projectile.x < element.x + 125 && projectile.x > element.x - 125) // magic numbers set the range of shooting
         {
             if (projectile.y < element.y + 20 && projectile.y > element.y - 20) // magic numbers set the y range of shooting.
@@ -113,6 +119,17 @@ function projectileHit(enemies, projectile) {
             }
         }
     }, this);
+}
+
+//For ship can't go outside on canvas.
+function Restriction(x, y) {
+    if (x >= gameField.width || x <= 0) {
+        return true;
+    } else if (y >= gameField.height - 20 || y <= 0) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function enemyType() {
