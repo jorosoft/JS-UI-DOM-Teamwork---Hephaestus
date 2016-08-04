@@ -63,8 +63,7 @@ function executeCommand() {
                 break;
             case 13:
                 var projectile1 = new projectile(playerStrahil.directionX + 50, playerStrahil.directionY); // magic number center the projectile around the ship.
-                drawAttack(projectile1);
-                projectileHit(enemies, projectile1);
+                AttackHandler(projectile1);
                 break;
         }
     });
@@ -98,21 +97,22 @@ function drawShip(x, y, type) {
     }
 }
 
-function drawAttack(args) {
+function AttackHandler(args) {
     var steps = 0;
     var i = 1;
 
-    function Animate() {
-        if (args.x > gameField.width) {
-            window.cancelAnimationFrame(Animate);
+    function performAttack() {
+        if (projectileHit(enemies,args) === true || args.x > gameField.width) {
+            window.cancelAnimationFrame(performAttack);
         } else {
             ctx.clearRect(args.x, args.y + 5, 22, 9);
             ctx.drawImage(bullet, args.x + 2, args.y + 5, 20, 8);
             args.x += i;
-            window.requestAnimationFrame(Animate);
+            projectileHit(enemies,args);
+            window.requestAnimationFrame(performAttack);
         }
     }
-    Animate();
+    performAttack();
 }
 
 function drawScore(args) {
@@ -137,15 +137,18 @@ function moveShip(args, dir) {
 }
 
 function projectileHit(enemies, projectile) {
-    enemies.forEach(function(element) {
-        if (projectile.x < element.x + 20 && projectile.x > element.x) // magic numbers set the range of shooting
+    for (var i = 0; i < enemies.length; i+=1)
+    {
+        if (projectile.x >= enemies[i].x) // magic numbers set the range of shooting
         {
-            if (projectile.y < element.y + 20 && projectile.y > element.y) // magic numbers set the y range of shooting.
-            {
-                ctx.clearRect(element.x - 50, element.y - 50, 150, 150); // magic number clears the enemy;
+            if (projectile.y < enemies[i].y + 20 && projectile.y > enemies[i].y-20) // magic numbers set the y range of shooting.
+            {  
+                ctx.clearRect(enemies[i].x,enemies[i].y-5,25,30); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
+                return true;
             }
         }
-    }, this);
+    }
+    return false;
 }
 
 //For ship can't go outside on canvas.
