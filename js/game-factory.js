@@ -3,7 +3,7 @@ var spaceImpactFactory = function () {
     var player = (function () {
         var defaultPlayerScore = 0;
         defaultPlayerAttack = 2,
-        defaultPlayerLife = 3;
+        defaultPlayerLife = 5;
         player = Object.create({});
 
         Object.defineProperty(player, "init", {
@@ -181,6 +181,7 @@ var spaceImpactFactory = function () {
                 this._positionY = val;
             }
         });
+
         return field;
     }());
 

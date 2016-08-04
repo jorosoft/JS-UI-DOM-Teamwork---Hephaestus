@@ -1,5 +1,7 @@
 var gameField = document.getElementById("game-field");
-var ctx = gameField.getContext("2d");
+var ctxGameField = gameField.getContext("2d");
+//var background = document.getElementById("game-background");
+//var ctxBackground = background.getContext("2d");
 
 var enemies = [],
     factoryInit = spaceImpactFactory(),
@@ -7,6 +9,9 @@ var enemies = [],
     enemyOne,
     enemyTwo,
     enemyThree;
+
+//var backgroundImg = new Image();
+//backgroundImg.src = "images/space.png";
 
 var shipImg = new Image();
 shipImg.src = "images/ship.png";
@@ -29,19 +34,26 @@ function gameInit() {
 
 }
 
+//backgroundImg.onload = function () {
+//    // create pattern
+//    var ptrn = ctxBackground.createPattern(backgroundImg, 'repeat'); // Create a pattern with this image, and set it to "repeat".
+//    ctxBackground.fillStyle = ptrn;
+//    ctxBackground.fillRect(0, 0, 960, 640); // context.fillRect(x, y, width, height);
+//}
+
 function enemyType() {
     var typeofEnemy = Math.floor(Math.random() * (3 - 1 + 1)) + 1,
         randomPosition = Math.floor(Math.random() * (100 - 1 + 1)) + 1
 
     if (typeofEnemy === 1) {
         enemyOne = factoryInit.getEnemy(5, 2, 50, 250, randomPosition, typeofEnemy);
-        drawShip(enemyImgOne, enemyOne.directionEnemyX, enemyOne.directionEnemyY, 50, 20);
+        moveEnemy(enemyOne, 20, 20, enemyImgOne);
+
         return enemyOne;
 
     } else if (typeofEnemy === 2) {
         enemyTwo = factoryInit.getEnemy(7, 3, 100, 250, randomPosition, typeofEnemy);
-        console.log(2);
-        drawShip(enemyImgTwo, enemyTwo.directionEnemyX, enemyTwo.directionEnemyY, 35, 30);
+        drawShip(enemyImgTwo, enemyTwo.directionEnemyX, enemyTwo.directionEnemyY, 45, 40);
         return enemyTwo;
 
     } else {
@@ -49,6 +61,30 @@ function enemyType() {
         drawShip(enemyImgThree, enemyThree.directionEnemyX, enemyThree.directionEnemyY, 50, 20);
         return enemyThree;
     }
+}
+
+function moveEnemy(enemy, sizeX, sizeY, image) {
+    var step = 1;
+        //end = enemy.directionEnemyX;
+    function performEnemyMove() {
+        if (enemy.directionEnemyX < 0) {
+            window.cancelAnimationFrame(performEnemyMove);
+        } else {
+            ctxGameField.clearRect(enemy.directionEnemyX, enemy.directionEnemyY + 5, 22, 9);
+            drawShip(image, enemy.directionEnemyX, enemy.directionEnemyY, sizeX, sizeY);
+            enemy.directionEnemyX -= step;
+            //for (var i = end; i >= 0; i--) {
+            //    if ( i % 5 === 0){
+            //        enemy.directionEnemyY += 5;
+            //    } else {
+            //        enemy.directionEnemyY -= 5;
+            //    }
+            //}
+            window.requestAnimationFrame(performEnemyMove);
+
+        }
+    }
+    performEnemyMove();
 }
 
 window.onload = function () {
@@ -61,7 +97,7 @@ window.onload = function () {
 executeCommand();
 
 function executeCommand() {
-    document.body.addEventListener('keydown', function(ev) {
+    document.body.addEventListener('keydown', function (ev) {
         switch (ev.keyCode) {
             case 83:
                 moveShip(player, "down");
@@ -109,22 +145,21 @@ function projectile(x, y) {
 }
 
 function drawShip(img, x, y, sizeX, sizeY) {
-    ctx.clearRect(x - 10, y - 10, sizeX + 20, sizeY + 20); // Ship moves with 10px position per step, magic numbers clear 10px around all sides of ship at every movement.
-    ctx.drawImage(img, x, y, sizeX, sizeY);
+    ctxGameField.clearRect(x - 10, y - 10, sizeX + 20, sizeY + 20); // Ship moves with 10px position per step, magic numbers clear 10px around all sides of ship at every movement.
+    ctxGameField.drawImage(img, x, y, sizeX, sizeY);
 }
 
 function AttackHandler(args) {
-    var steps = 0;
-    var i = 1;
+    var step = 1;
 
     function performAttack() {
-        if (projectileHit(enemies,args) === true || args.x > gameField.width) {
+        if (projectileHit(enemies, args) === true || args.x > gameField.width) {
             window.cancelAnimationFrame(performAttack);
         } else {
-            ctx.clearRect(args.x, args.y + 5, 22, 9);
-            ctx.drawImage(bullet, args.x + 2, args.y + 5, 20, 8);
-            args.x += i;
-            projectileHit(enemies,args);
+            ctxGameField.clearRect(args.x, args.y + 5, 22, 9);
+            ctxGameField.drawImage(bullet, args.x + 2, args.y + 5, 20, 8);
+            args.x += step;
+            projectileHit(enemies, args);
             window.requestAnimationFrame(performAttack);
         }
     }
@@ -153,10 +188,9 @@ function moveShip(args, dir) {
 }
 
 function projectileHit(enemies, projectile) {
-    for (var i = 0; i < enemies.length; i+=1)
-    {
-        if (projectile.x == enemies[i].directionEnemyX- 20 && projectile.y == enemies[i].directionEnemyY) {
-            ctx.clearRect(enemies[i].directionEnemyX - 20, enemies[i].directionEnemyY - 5, 45, 30); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
+    for (var i = 0; i < enemies.length; i += 1) {
+        if (projectile.x == enemies[i].directionEnemyX - 20 && projectile.y == enemies[i].directionEnemyY) {
+            ctxGameField.clearRect(enemies[i].directionEnemyX - 20, enemies[i].directionEnemyY - 5, 45, 30); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
             return true;
         }
         else {
@@ -164,7 +198,7 @@ function projectileHit(enemies, projectile) {
             {
                 if (projectile.y < enemies[i].directionEnemyY + 20 && projectile.y > enemies[i].directionEnemyY - 20) // magic numbers set the y range of shooting.
                 {
-                    ctx.clearRect(enemies[i].directionEnemyX - 20, enemies[i].directionEnemyY - 5, 100, 50); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
+                    ctxGameField.clearRect(enemies[i].directionEnemyX - 20, enemies[i].directionEnemyY - 5, 100, 50); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
                     return true;
                 }
             }
