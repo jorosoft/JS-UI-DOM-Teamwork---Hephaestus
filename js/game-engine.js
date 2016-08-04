@@ -10,7 +10,6 @@ var enemies = [],
 
 var shipImg = new Image();
 shipImg.src = "images/ship.png";
-<<<<<<< HEAD
 
 var enemyImgOne = new Image();
 enemyImgOne.src = "images/enemy1.gif";
@@ -21,10 +20,6 @@ enemyImgTwo.src = "images/enemy2.gif";
 var enemyImgThree = new Image();
 enemyImgThree.src = "images/enemy3.png";
 
-=======
-var enemyImg = new Image();
-enemyImg.src = "images/enemy.gif";
->>>>>>> origin/master
 var bullet = new Image();
 bullet.src = "images/bullet.png";
 
@@ -63,23 +58,12 @@ window.onload = function () {
 }
 
 
-<<<<<<< HEAD
-=======
-var enemies = [];
-var enemy1 = new enemy(200, 50);
-enemies.push(enemy1);
-window.onload = function() {
-    drawShip(playerStrahil.directionX, playerStrahil.directionY, "player");
-    drawShip(enemy1.x, enemy1.y, "enemy");
-}
->>>>>>> origin/master
 executeCommand();
 
 function executeCommand() {
     document.body.addEventListener('keydown', function(ev) {
         switch (ev.keyCode) {
             case 83:
-<<<<<<< HEAD
                 moveShip(player, "down");
                 if (RestrictionShip(player.directionX, player.directionY)) {
                     player.directionY = 120;
@@ -113,41 +97,6 @@ function executeCommand() {
                 break;
             case 13:
                 var projectile1 = new projectile(player.directionX + 50, player.directionY); // magic number center the projectile around the ship.
-=======
-                moveShip(playerStrahil, "down");
-                if (RestrictionShip(playerStrahil.directionX, playerStrahil.directionY)) {
-                    playerStrahil.directionY = 120;
-                    break;
-                }
-                drawShip(playerStrahil.directionX, playerStrahil.directionY, "player");
-                break;
-            case 87:
-                moveShip(playerStrahil, "up");
-                if (RestrictionShip(playerStrahil.directionX, playerStrahil.directionY)) {
-                    playerStrahil.directionY = 0;
-                    break;
-                }
-                drawShip(playerStrahil.directionX, playerStrahil.directionY, "player");
-                break;
-            case 65:
-                moveShip(playerStrahil, "left");
-                if (RestrictionShip(playerStrahil.directionX, playerStrahil.directionY)) {
-                    playerStrahil.directionX = 0;
-                    break;
-                }
-                drawShip(playerStrahil.directionX, playerStrahil.directionY, "player");
-                break;
-            case 68:
-                moveShip(playerStrahil, "right");
-                if (RestrictionShip(playerStrahil.directionX, playerStrahil.directionY)) {
-                    playerStrahil.directionX = 250;
-                    break;
-                }
-                drawShip(playerStrahil.directionX, playerStrahil.directionY, "player");
-                break;
-            case 13:
-                var projectile1 = new projectile(playerStrahil.directionX + 50, playerStrahil.directionY); // magic number center the projectile around the ship.
->>>>>>> origin/master
                 AttackHandler(projectile1);
                 break;
         }
@@ -159,23 +108,9 @@ function projectile(x, y) {
     this.y = y;
 }
 
-<<<<<<< HEAD
 function drawShip(img, x, y, sizeX, sizeY) {
     ctx.clearRect(x - 10, y - 10, sizeX + 20, sizeY + 20); // Ship moves with 10px position per step, magic numbers clear 10px around all sides of ship at every movement.
     ctx.drawImage(img, x, y, sizeX, sizeY);
-=======
-function drawShip(x, y, type) {
-    switch (type) {
-        case "player":
-            ctx.clearRect(x - 10, y - 10, 70, 40); // Ship moves with 10px position per step, magic numbers clear 10px around all sides of ship at every movement.
-            ctx.drawImage(shipImg, x, y, 50, 20);
-            break;
-        case "enemy":
-            ctx.clearRect(x - 10, y - 10, 40, 40);
-            ctx.drawImage(enemyImg, x, y, 20, 20);
-            break;
-    }
->>>>>>> origin/master
 }
 
 function AttackHandler(args) {
@@ -220,7 +155,6 @@ function moveShip(args, dir) {
 function projectileHit(enemies, projectile) {
     for (var i = 0; i < enemies.length; i+=1)
     {
-<<<<<<< HEAD
         if (projectile.x == enemies[i].directionEnemyX- 20 && projectile.y == enemies[i].directionEnemyY) {
             ctx.clearRect(enemies[i].directionEnemyX - 20, enemies[i].directionEnemyY - 5, 45, 30); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
             return true;
@@ -233,14 +167,6 @@ function projectileHit(enemies, projectile) {
                     ctx.clearRect(enemies[i].directionEnemyX - 20, enemies[i].directionEnemyY - 5, 100, 50); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
                     return true;
                 }
-=======
-        if (projectile.x >= enemies[i].x) // magic numbers set the range of shooting
-        {
-            if (projectile.y < enemies[i].y + 20 && projectile.y > enemies[i].y-20) // magic numbers set the y range of shooting.
-            {  
-                ctx.clearRect(enemies[i].x,enemies[i].y-5,25,30); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
-                return true;
->>>>>>> origin/master
             }
         }
     }
