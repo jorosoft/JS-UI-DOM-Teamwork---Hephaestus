@@ -14,6 +14,7 @@ var spaceImpactFactory = function () {
                 this.score = defaultPlayerScore;
                 this.directionX = directionX;
                 this.directionY = directionY;
+
                 return this;
             }
         });
@@ -82,13 +83,15 @@ var spaceImpactFactory = function () {
         enemy = Object.create({});
 
         Object.defineProperty(enemy, "init", {
-            value: function (life, attack, addScoreToPlayer, directionX, directionY) {
-                this.attack = attack;
+            value: function (life, attack, addScoreToPlayer, directionEnemyX, directionEnemyY, enemyType) {
                 this.life = life;
+                this.attack = attack;
                 this.addScoreToPlayer = addScoreToPlayer;
                 this.directionEnemyX = directionEnemyX;
                 this.directionEnemyY = directionEnemyY;
+                this.enemyType = enemyType;
 
+                return this;
             }
         });
 
@@ -110,13 +113,16 @@ var spaceImpactFactory = function () {
             }
         });
 
-        Object.defineProperty(enemy, "score", {
+        Object.defineProperty(enemy, "addScoreToPlayer", {
             get: function () {
-                return this._score;
+                return this._addScoreToPlayer;
+            },
+            set: function (val) {
+                this._addScoreToPlayer = val;
             }
         });
 
-        Object.defineProperty(player, "directionEnemyX", {
+        Object.defineProperty(enemy, "directionEnemyX", {
             get: function () {
                 return this._directionEnemyX;
             },
@@ -125,7 +131,7 @@ var spaceImpactFactory = function () {
             }
         });
 
-        Object.defineProperty(player, "directionEnemyY", {
+        Object.defineProperty(enemy, "directionEnemyY", {
             get: function () {
                 return this._directionEnemyY;
             },
@@ -133,10 +139,16 @@ var spaceImpactFactory = function () {
                 this._directionEnemyY = val;
             }
         });
-        // life 
-        // attack
-        // direction
-        // position
+
+        Object.defineProperty(enemy, "enemyType", {
+            get: function () {
+                return this._enemyType;
+            },
+            set: function (val) {
+                this._enemyType = val;
+            }
+        });
+
         return enemy;
     }());
 
@@ -147,6 +159,8 @@ var spaceImpactFactory = function () {
             value: function (positionX, positionY) {
                 this.positionX = positionX;
                 this.positionY = positionY;
+
+                return this;
             }
         });
 
@@ -167,14 +181,15 @@ var spaceImpactFactory = function () {
                 this._positionY = val;
             }
         });
+        return field;
     }());
 
     return {
         getPlayer: function (name, directionX, directionY) {
             return Object.create(player).init(name, directionX, directionY);
         },
-        getEnemy: function (life, attack, addScoreToPlayer, directionX, directionY) {
-            return Object.create(enemy).init(life, attack, addScoreToPlayer, directionX, directionY);
+        getEnemy: function (life, attack, addScoreToPlayer, directionEnemyX, directionEnemyY, enemyType) {
+            return Object.create(enemy).init(life, attack, addScoreToPlayer, directionEnemyX, directionEnemyY, enemyType);
         },
         getField: function (positionX, positionY) {
             return Object.create(field).init(positionX, positionY);

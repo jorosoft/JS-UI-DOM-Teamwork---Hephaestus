@@ -6,7 +6,7 @@ body {
 }
 
 #game-field {
-    display: none;
+    /*display: none*/
     width: 960px;
     height: 640px;
     border: 2px solid red;
@@ -25,11 +25,9 @@ button {
 }
 
 #high-score {
-    color: white;
     display: none;
 }
 
 h1 {
     text-align: center;
-    color: white;
 }
