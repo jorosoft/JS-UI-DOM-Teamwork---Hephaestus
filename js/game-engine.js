@@ -13,6 +13,8 @@ var enemies = [],
 //var backgroundImg = new Image();
 //backgroundImg.src = "images/space.png";
 
+var bulletes = [];
+
 var shipImg = new Image();
 shipImg.src = "images/ship.png";
 
@@ -27,6 +29,23 @@ enemyImgThree.src = "images/enemy3.png";
 
 var bullet = new Image();
 bullet.src = "images/bullet.png";
+
+
+if (!Array.prototype.remove) {
+    Array.prototype.remove = function(val, all) {
+        var i, removedItems = [];
+        if (all) {
+            for (i = this.length; i--;) {
+                if (this[i] === val) removedItems.push(this.splice(i, 1));
+            }
+        } else { //same as before...
+            i = this.indexOf(val);
+            if (i > -1) removedItems = this.splice(i, 1);
+        }
+        return removedItems;
+    };
+}
+
 
 function gameInit() {
 
@@ -67,7 +86,15 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
     var step = 1,
         count = 0,
         index = 1;
+
     function performEnemyMove() {
+        for (var index = 0; index < bulletes.length; index++) {
+            if (projectileHit(enemies, bulletes[index])) {
+                window.cancelAnimationFrame(performEnemyMove);
+                return;
+            }
+        }
+
         if (enemy.directionEnemyX < 0) {
             window.cancelAnimationFrame(performEnemyMove);
         } else {
@@ -79,9 +106,9 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
             if (count === 10 || count === -10) {
                 count = 0;
                 index *= -1;
-            }            
-            
-            setTimeout(function (){
+            }
+
+            setTimeout(function() {
                 window.requestAnimationFrame(performEnemyMove);
             }, 200);
         }
@@ -89,7 +116,7 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
     performEnemyMove();
 }
 
-window.onload = function () {
+window.onload = function() {
     var enemy = enemyType();
     drawShip(shipImg, player.directionX, player.directionY, 50, 20);
     enemies.push(enemy);
@@ -99,7 +126,7 @@ window.onload = function () {
 executeCommand();
 
 function executeCommand() {
-    document.body.addEventListener('keydown', function (ev) {
+    document.body.addEventListener('keydown', function(ev) {
         switch (ev.keyCode) {
             case 83:
                 moveShip(player, "down");
@@ -189,18 +216,41 @@ function moveShip(args, dir) {
     }
 }
 
+// function projectileHit(enemies, projectile) {
+//     for (var i = 0; i < enemies.length; i += 1) {
+//         if (projectile.x == enemies[i].directionEnemyX - 20 && projectile.y == enemies[i].directionEnemyY) {
+//             ctxGameField.clearRect(enemies[i].directionEnemyX - 20, enemies[i].directionEnemyY - 5, 45, 30); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
+//             return true;
+//         } else {
+//             if (projectile.x >= enemies[i].directionEnemyX) // magic numbers set the range of shooting
+//             {
+//                 if (projectile.y < enemies[i].directionEnemyY + 20 && projectile.y > enemies[i].directionEnemyY - 20) // magic numbers set the y range of shooting.
+//                 {
+//                     ctxGameField.clearRect(enemies[i].directionEnemyX - 20, enemies[i].directionEnemyY - 5, 100, 50); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
+//                     return true;
+//                 }
+//             }
+//         }
+//     }
+//     return false;
+// }
+
+
 function projectileHit(enemies, projectile) {
     for (var i = 0; i < enemies.length; i += 1) {
         if (projectile.x == enemies[i].directionEnemyX - 20 && projectile.y == enemies[i].directionEnemyY) {
             ctxGameField.clearRect(enemies[i].directionEnemyX - 20, enemies[i].directionEnemyY - 5, 45, 30); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
+            enemies.remove(enemies[i]);
+            bulletes.remove(bulletes[index]);
             return true;
-        }
-        else {
+        } else {
             if (projectile.x >= enemies[i].directionEnemyX) // magic numbers set the range of shooting
             {
                 if (projectile.y < enemies[i].directionEnemyY + 20 && projectile.y > enemies[i].directionEnemyY - 20) // magic numbers set the y range of shooting.
                 {
                     ctxGameField.clearRect(enemies[i].directionEnemyX - 20, enemies[i].directionEnemyY - 5, 100, 50); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
+                    enemies.remove(enemies[i]);
+                    bulletes.remove(bulletes[index]);
                     return true;
                 }
             }
