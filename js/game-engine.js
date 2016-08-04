@@ -64,8 +64,9 @@ function enemyType() {
 }
 
 function moveEnemy(enemy, sizeX, sizeY, image) {
-    var step = 1;
-        //end = enemy.directionEnemyX;
+    var step = 1,
+        count = 0,
+        index = 1;
     function performEnemyMove() {
         if (enemy.directionEnemyX < 0) {
             window.cancelAnimationFrame(performEnemyMove);
@@ -73,15 +74,16 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
             ctxGameField.clearRect(enemy.directionEnemyX, enemy.directionEnemyY + 5, 22, 9);
             drawShip(image, enemy.directionEnemyX, enemy.directionEnemyY, sizeX, sizeY);
             enemy.directionEnemyX -= step;
-            //for (var i = end; i >= 0; i--) {
-            //    if ( i % 5 === 0){
-            //        enemy.directionEnemyY += 5;
-            //    } else {
-            //        enemy.directionEnemyY -= 5;
-            //    }
-            //}
-            window.requestAnimationFrame(performEnemyMove);
-
+            enemy.directionEnemyY += count;
+            count += index;
+            if (count === 10 || count === -10) {
+                count = 0;
+                index *= -1;
+            }            
+            
+            setTimeout(function (){
+                window.requestAnimationFrame(performEnemyMove);
+            }, 200);
         }
     }
     performEnemyMove();
