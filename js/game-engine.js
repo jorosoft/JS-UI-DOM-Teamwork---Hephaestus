@@ -4,6 +4,8 @@ var ctxGameField = gameField.getContext("2d");
 //var ctxBackground = background.getContext("2d");
 
 var enemies = [],
+    projectiles = [],
+    players = [],
     factoryInit = spaceImpactFactory(),
     player = factoryInit.getPlayer("Strahil", 10, 60),
     enemyOne,
@@ -12,8 +14,6 @@ var enemies = [],
 
 //var backgroundImg = new Image();
 //backgroundImg.src = "images/space.png";
-
-var bulletes = [];
 
 var shipImg = new Image();
 shipImg.src = "images/ship.png";
@@ -29,6 +29,9 @@ enemyImgThree.src = "images/enemy3.png";
 
 var bullet = new Image();
 bullet.src = "images/bullet.png";
+
+var explosion = new Image();
+explosion.src = "images/explosion.jpg";
 
 
 if (!Array.prototype.remove) {
@@ -67,17 +70,19 @@ function enemyType() {
     if (typeofEnemy === 1) {
         enemyOne = factoryInit.getEnemy(5, 2, 50, 250, randomPosition, typeofEnemy);
         moveEnemy(enemyOne, 20, 20, enemyImgOne);
-
+        enemyOne.enemyType = 1;
         return enemyOne;
 
     } else if (typeofEnemy === 2) {
         enemyTwo = factoryInit.getEnemy(7, 3, 100, 250, randomPosition, typeofEnemy);
-        drawShip(enemyImgTwo, enemyTwo.directionEnemyX, enemyTwo.directionEnemyY, 45, 40);
+        moveEnemy(enemyTwo, 45, 40, enemyImgTwo);
+        enemyTwo.enemyType = 2;
         return enemyTwo;
 
     } else {
         enemyThree = factoryInit.getEnemy(10, 1, 150, 250, randomPosition, typeofEnemy);
-        drawShip(enemyImgThree, enemyThree.directionEnemyX, enemyThree.directionEnemyY, 50, 20);
+        moveEnemy(enemyThree, 50, 20, enemyImgThree);
+        enemyThree.enemyType = 3;
         return enemyThree;
     }
 }
@@ -85,32 +90,48 @@ function enemyType() {
 function moveEnemy(enemy, sizeX, sizeY, image) {
     var step = 1,
         count = 0,
-        index = 1;
+        index = 1,
+        slow;
 
     function performEnemyMove() {
-        for (var i = 0; i < bulletes.length; i += 1) {
-            if (projectileHit(enemies, bulletes[i])) {
-                window.cancelAnimationFrame(performEnemyMove);
-                return;
-            }
-        }
-
-        if (enemy.directionEnemyX < 0) {
+        if (enemy.life <= 0 || enemy.directionEnemyX < -100) {
             window.cancelAnimationFrame(performEnemyMove);
         } else {
-            ctxGameField.clearRect(enemy.directionEnemyX, enemy.directionEnemyY + 5, 22, 9);
-            drawShip(image, enemy.directionEnemyX, enemy.directionEnemyY, sizeX, sizeY);
-            enemy.directionEnemyX -= step;
-            enemy.directionEnemyY += count;
-            count += index;
-            if (count === 10 || count === -10) {
-                count = 0;
-                index *= -1;
+            switch (enemy.enemyType) {
+                case 1:
+                    ctxGameField.clearRect(enemy.directionEnemyX, enemy.directionEnemyY + 5, 22, 9);
+                    drawShip(image, enemy.directionEnemyX, enemy.directionEnemyY, sizeX, sizeY);
+                    enemy.directionEnemyX -= step;
+                    slow = 0;
+                    if (enemy.directionEnemyX % 5 === 0) {
+                        var newProjectile = new projectile(enemy.directionEnemyX - 20, enemy.directionEnemyY);
+                        enemyAttackHandler(newProjectile);
+                    }
+                    break;
+                case 2:
+                    ctxGameField.clearRect(enemy.directionEnemyX, enemy.directionEnemyY + 5, 22, 9);
+                    drawShip(image, enemy.directionEnemyX, enemy.directionEnemyY, sizeX, sizeY);
+                    enemy.directionEnemyX -= step;
+                    enemy.directionEnemyY += count;
+                    count += index;
+                    if (count === 10 || count === -10) {
+                        count = 0;
+                        index *= -1;
+                    }
+                    slow = 300;
+                    break;
+                case 3:
+                    ctxGameField.clearRect(enemy.directionEnemyX, enemy.directionEnemyY + 5, 22, 9);
+                    drawShip(image, enemy.directionEnemyX, enemy.directionEnemyY, sizeX, sizeY);
+                    enemy.directionEnemyX -= step;
+                    slow = 100
+                    break;
             }
+
 
             setTimeout(function() {
                 window.requestAnimationFrame(performEnemyMove);
-            }, 200);
+            }, slow);
         }
     }
     performEnemyMove();
@@ -120,6 +141,7 @@ window.onload = function() {
     var enemy = enemyType();
     drawShip(shipImg, player.directionX, player.directionY, 50, 20);
     enemies.push(enemy);
+    players.push(player);
 }
 
 
@@ -161,8 +183,9 @@ function executeCommand() {
                 drawShip(shipImg, player.directionX, player.directionY, 50, 20);
                 break;
             case 13:
-                var projectile1 = new projectile(player.directionX + 50, player.directionY); // magic number center the projectile around the ship.
-                AttackHandler(projectile1);
+                var newProjectile = new projectile(player.directionX + 50, player.directionY); // magic number center the projectile around the ship.
+                projectiles.push(newProjectile);
+                playerAttackHandler(newProjectile);
                 break;
         }
     });
@@ -178,17 +201,34 @@ function drawShip(img, x, y, sizeX, sizeY) {
     ctxGameField.drawImage(img, x, y, sizeX, sizeY);
 }
 
-function AttackHandler(args) {
+function playerAttackHandler(args) {
     var step = 1;
 
     function performAttack() {
-        if (projectileHit(enemies, args) === true || args.x > gameField.width) {
+        if (playerProjectileHit(enemies, args) === true || args.x > gameField.width) {
+            drawExplosion(args.x, args.y);
             window.cancelAnimationFrame(performAttack);
         } else {
             ctxGameField.clearRect(args.x, args.y + 5, 22, 9);
             ctxGameField.drawImage(bullet, args.x + 2, args.y + 5, 20, 8);
             args.x += step;
-            projectileHit(enemies, args);
+            window.requestAnimationFrame(performAttack);
+        }
+    }
+    performAttack();
+}
+
+function enemyAttackHandler(args) {
+    var step = 1;
+
+    function performAttack() {
+        if (enemyProjectileHit(players, args) === true || args.x > gameField.width) {
+            drawExplosion(args.x, args.y);
+            window.cancelAnimationFrame(performAttack);
+        } else {
+            ctxGameField.clearRect(args.x - 30, args.y + 5, 22, 9);
+            ctxGameField.drawImage(bullet, args.x - 30, args.y + 5, 20, 8);
+            args.x -= step * 2;
             window.requestAnimationFrame(performAttack);
         }
     }
@@ -197,6 +237,28 @@ function AttackHandler(args) {
 
 function drawScore(args) {
     console.log(player1.score);
+}
+
+function drawExplosion(x, y) {
+    var count = 0;
+    var posx;
+    var posy;
+
+    function Animate() {
+        window.requestAnimationFrame(Animate);
+        posx = (count % 5) * 45;
+        posy = Math.floor(count / 5) * 45;
+
+        ctxGameField.clearRect(x, y, 45, 45);
+        ctxGameField.drawImage(explosion, posx, posy, 45, 45, x, y, 45, 45); // magic numbers set the proper possition of explosion.
+        if (count === 50) {
+            window.cancelAnimationFrame(Animate);
+        } else {
+            count++;
+        }
+
+    }
+    Animate();
 }
 
 function moveShip(args, dir) {
@@ -216,32 +278,13 @@ function moveShip(args, dir) {
     }
 }
 
-// function projectileHit(enemies, projectile) {
-//     for (var i = 0; i < enemies.length; i += 1) {
-//         if (projectile.x == enemies[i].directionEnemyX - 20 && projectile.y == enemies[i].directionEnemyY) {
-//             ctxGameField.clearRect(enemies[i].directionEnemyX - 20, enemies[i].directionEnemyY - 5, 45, 30); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
-//             return true;
-//         } else {
-//             if (projectile.x >= enemies[i].directionEnemyX) // magic numbers set the range of shooting
-//             {
-//                 if (projectile.y < enemies[i].directionEnemyY + 20 && projectile.y > enemies[i].directionEnemyY - 20) // magic numbers set the y range of shooting.
-//                 {
-//                     ctxGameField.clearRect(enemies[i].directionEnemyX - 20, enemies[i].directionEnemyY - 5, 100, 50); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
-//                     return true;
-//                 }
-//             }
-//         }
-//     }
-//     return false;
-// }
-
-
-function projectileHit(enemies, projectile) {
+function playerProjectileHit(enemies, projectile) {
     for (var i = 0; i < enemies.length; i += 1) {
         if (projectile.x == enemies[i].directionEnemyX - 20 && projectile.y == enemies[i].directionEnemyY) {
             ctxGameField.clearRect(enemies[i].directionEnemyX - 20, enemies[i].directionEnemyY - 5, 45, 30); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
-            enemies.remove(enemies[i]);
-            bulletes.remove(bulletes[index]);
+            if (enemies[i].life <= 0) {
+                enemies.remove(enemies[i]);
+            }
             return true;
         } else {
             if (projectile.x >= enemies[i].directionEnemyX) // magic numbers set the range of shooting
@@ -249,8 +292,36 @@ function projectileHit(enemies, projectile) {
                 if (projectile.y < enemies[i].directionEnemyY + 20 && projectile.y > enemies[i].directionEnemyY - 20) // magic numbers set the y range of shooting.
                 {
                     ctxGameField.clearRect(enemies[i].directionEnemyX - 20, enemies[i].directionEnemyY - 5, 100, 50); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
-                    enemies.remove(enemies[i]);
-                    bulletes.remove(bulletes[index]);
+                    enemies[i].life -= 5;
+                    if (enemies[i].life <= 0) {
+                        enemies.remove(enemies[i]);
+                    }
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+function enemyProjectileHit(enemies, projectile) {
+    for (var i = 0; i < enemies.length; i += 1) {
+        if (projectile.x == enemies[i].directionX - 20 && projectile.y == enemies[i].directionY) {
+            ctxGameField.clearRect(enemies[i].directionX - 20, enemies[i].directionY - 5, 45, 30); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
+            if (enemies[i].life <= 0) {
+                enemies.remove(enemies[i]);
+            }
+            return true;
+        } else {
+            if (projectile.x >= enemies[i].directionX) // magic numbers set the range of shooting
+            {
+                if (projectile.y < enemies[i].directionY + 20 && projectile.y > enemies[i].directionY - 20) // magic numbers set the y range of shooting.
+                {
+                    ctxGameField.clearRect(enemies[i].directionX - 20, enemies[i].directionY - 5, 100, 50); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
+                    enemies[i].life -= 5;
+                    if (enemies[i].life <= 0) {
+                        enemies.remove(enemies[i]);
+                    }
                     return true;
                 }
             }
