@@ -35,7 +35,7 @@ if (!Array.prototype.remove) {
     Array.prototype.remove = function(val, all) {
         var i, removedItems = [];
         if (all) {
-            for (i = this.length; i--;) {
+            for (i = this.length; i -= 1;) {
                 if (this[i] === val) removedItems.push(this.splice(i, 1));
             }
         } else { //same as before...
@@ -88,8 +88,8 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
         index = 1;
 
     function performEnemyMove() {
-        for (var index = 0; index < bulletes.length; index++) {
-            if (projectileHit(enemies, bulletes[index])) {
+        for (var i = 0; i < bulletes.length; i += 1) {
+            if (projectileHit(enemies, bulletes[i])) {
                 window.cancelAnimationFrame(performEnemyMove);
                 return;
             }
