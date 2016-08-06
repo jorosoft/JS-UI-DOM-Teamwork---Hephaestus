@@ -6,13 +6,27 @@ body {
 }
 
 #game-field {
-    display: none;
+    /*display: none*/
+    position: absolute;
+    left: 50px;
     width: 960px;
     height: 640px;
     border: 2px solid red;
+    z-index: 10;
+}
+
+#game-background{
+    /*display: none*/
+    position: absolute;
+    left: 50px;
+    width: 960px;
+    height: 640px;
+    border: 2px solid yellow;
+    z-index: 0;
 }
 
 #wrapper {
+    position: relative;
     text-align: center;
 }
 
@@ -25,11 +39,9 @@ button {
 }
 
 #high-score {
-    color: white;
     display: none;
 }
 
 h1 {
     text-align: center;
-    color: white;
 }
