@@ -34,7 +34,7 @@ explosion.src = "images/explosion.jpg";
 
 
 if (!Array.prototype.remove) {
-    Array.prototype.remove = function (val, all) {
+    Array.prototype.remove = function(val, all) {
         var i, removedItems = [];
         if (all) {
             for (i = this.length; i -= 1;) {
@@ -47,7 +47,7 @@ if (!Array.prototype.remove) {
         return removedItems;
     };
 }
-window.onload = function () {
+window.onload = function() {
     drawShip(shipImg, player.positionX, player.positionY, 50, 20);
     players.push(player);
     multipleEnemies();
@@ -55,6 +55,7 @@ window.onload = function () {
 
 function multipleEnemies() {
     count = 0;
+
     function invokeEnemy() {
         if (count % 280 == 0) {
             if (enemies.length < 4) {
@@ -149,7 +150,7 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
                     break;
             }
 
-            setTimeout(function () {
+            setTimeout(function() {
                 window.requestAnimationFrame(performEnemyMove);
             }, speed);
         }
@@ -160,7 +161,7 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
 executeCommand();
 
 function executeCommand() {
-    document.body.addEventListener('keydown', function (ev) {
+    document.body.addEventListener('keydown', function(ev) {
         switch (ev.keyCode) {
             case 83:
                 moveShip(player, "down");
@@ -228,15 +229,16 @@ function playerAttackHandler(args) {
         var projectileHitInfo = projectileHit(enemies, args);
         if (projectileHitInfo.isHit === true || args.positionX > gameField.width) {
             enemies[projectileHitInfo.index].life -= player.attack;
+            drawScoreBoard(player.name, player.score, player.life);
             if (enemies[projectileHitInfo.index].life <= 0) {
                 drawExplosion(projectileHitInfo.positionX, projectileHitInfo.positionY);
                 player.score += enemies[projectileHitInfo.index].addScoreToPlayer;
+                drawScoreBoard(player.name, player.score, player.life);
                 console.log(player.score);
                 enemies.splice(projectileHitInfo.index, 1);
             }
             window.cancelAnimationFrame(performAttack);
-        }
-        else {
+        } else {
             ctxGameField.clearRect(args.x, args.y + 5, 22, 9);
             ctxGameField.drawImage(bullet, args.x + 2, args.y + 5, 20, 8);
             args.x += step;
@@ -254,11 +256,10 @@ function enemyAttackHandler(projectile) {
         var projectileHitInfo = enemyProjectileHit(player, projectile);
         if (projectile.x < -50) {
             window.cancelAnimationFrame(performAttack);
-        }
-        else {
+        } else {
             if (projectileHitInfo.isHit === true) {
                 player.life -= player.attack;
-
+                drawScoreBoard(player.name, player.score, player.life);
                 ctxGameField.clearRect(projectile.x, projectile.y + 5, 22, 9);
                 ctxGameField.drawImage(shipImg, player.positionX, player.positionY, 50, 20);
                 if (player.life <= 0) {
@@ -268,8 +269,7 @@ function enemyAttackHandler(projectile) {
                     console.log("Game over");
                 }
                 window.cancelAnimationFrame(performAttack);
-            }
-            else {
+            } else {
                 ctxGameField.clearRect(projectile.x, projectile.y + 5, 22, 9);
                 ctxGameField.drawImage(bullet, projectile.x - 2, projectile.y + 5, 20, 8);
                 projectile.x -= step + 3;
@@ -331,8 +331,7 @@ function projectileHit(enemies, projectile) {
                 index: i,
                 isHit: true
             };
-        }
-        else {
+        } else {
             if (projectile.x >= enemies[i].positionX) // magic numbers set the range of shooting
             {
                 if (projectile.y < enemies[i].positionY + 20 && projectile.y > enemies[i].positionY - 20) // magic numbers set the y range of shooting.
@@ -357,8 +356,7 @@ function enemyProjectileHit(player, projectile) {
             positionY: player.positionY,
             isHit: true
         };
-    }
-    else {
+    } else {
         if (projectile.x <= player.positionX) // magic numbers set the range of shooting
         {
             if (projectile.y < player.positionY + 20 && projectile.y > player.positionY - 20) // magic numbers set the y range of shooting.

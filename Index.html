@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Space Impact</title>
     <link rel="stylesheet" href="css/game.css">
 </head>
+
 <body>
     <div id="wrapper">
         <h1>Space Impact</h1>
-
+        <svg id="scoreBoard"></svg>
         <div>
             <canvas id="game-background" class="canvas"></canvas>
         </div>
@@ -15,7 +17,7 @@
         <div>
             <canvas id="game-field" class="canvas"></canvas>
         </div>
-
+        <svg id="legendBoard"></svg>
         <button id="start-button">Start</button>
         <button id="high-score-button">High Score</button>
         <button id="back-button">Back</button>
@@ -28,5 +30,7 @@
     <script src="js/game-factory.js"></script>
     <script src="js/game-engine.js"></script>
     <script src="js/game-start.js"></script>
+    <script src="js/game-engine-scoreboard.js"></script>
 </body>
+
 </html>
