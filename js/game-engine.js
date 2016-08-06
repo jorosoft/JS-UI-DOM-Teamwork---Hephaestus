@@ -48,12 +48,11 @@ function enemyType() {
     if (typeofEnemy === 1) {
         enemyOne = factoryInit.getEnemy(5, 2, 50, 250, randomPosition, typeofEnemy);
         moveEnemy(enemyOne, 20, 20, enemyImgOne);
-
         return enemyOne;
 
     } else if (typeofEnemy === 2) {
         enemyTwo = factoryInit.getEnemy(7, 3, 100, 250, randomPosition, typeofEnemy);
-        drawShip(enemyImgTwo, enemyTwo.directionEnemyX, enemyTwo.directionEnemyY, 45, 40);
+        moveEnemy(enemyTwo, 45, 40, enemyImgTwo);
         return enemyTwo;
 
     } else {
@@ -64,24 +63,46 @@ function enemyType() {
 }
 
 function moveEnemy(enemy, sizeX, sizeY, image) {
-    var step = 1;
-        //end = enemy.directionEnemyX;
+    var step = 1,
+        count = 0,
+        index = 1;
     function performEnemyMove() {
         if (enemy.directionEnemyX < 0) {
             window.cancelAnimationFrame(performEnemyMove);
         } else {
             ctxGameField.clearRect(enemy.directionEnemyX, enemy.directionEnemyY + 5, 22, 9);
             drawShip(image, enemy.directionEnemyX, enemy.directionEnemyY, sizeX, sizeY);
-            enemy.directionEnemyX -= step;
-            //for (var i = end; i >= 0; i--) {
-            //    if ( i % 5 === 0){
-            //        enemy.directionEnemyY += 5;
-            //    } else {
-            //        enemy.directionEnemyY -= 5;
-            //    }
-            //}
-            window.requestAnimationFrame(performEnemyMove);
+            console.log(enemy.enemyType);
+            if (enemy.enemyType == 1) {
+                enemy.directionEnemyX -= step;
+                window.requestAnimationFrame(performEnemyMove);
+            }
 
+            if (enemy.enemyType == 2) {
+                enemy.directionEnemyX -= step;
+                enemy.directionEnemyY += count;
+                count += index;
+                if (count === 10 || count === -10) {
+                    count = 0;
+                    index *= -1;
+                }
+
+                setTimeout(function () {
+                    window.requestAnimationFrame(performEnemyMove);
+                }, 60);
+            } else if (enemy.enemyType == 3) {
+                enemy.directionEnemyX -= step;
+                enemy.directionEnemyY += count;
+                count += index;
+                if (count === 10 || count === -10) {
+                    count = 0;
+                    step *= -1;
+                }
+
+                setTimeout(function () {
+                    window.requestAnimationFrame(performEnemyMove);
+                }, 60);
+            }
         }
     }
     performEnemyMove();
