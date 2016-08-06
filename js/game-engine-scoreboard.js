@@ -1,5 +1,25 @@
+var scoreBoard,
+    score,
+    progressRatio;
+
 function drawScoreBoard(playerName, playerScore, playerLife) {
-    var scoreBoard = document.getElementById("scoreBoard");
+    if (scoreBoard) {
+        score.textContent = playerScore;
+        if (playerLife > 60) {
+            progressRatio.setAttribute("width", playerLife * 2 - 2);
+            progressRatio.setAttribute("fill", "green");
+        } else if (playerLife >= 30 && playerLife <= 60) {
+            progressRatio.setAttribute("width", playerLife * 2);
+            progressRatio.setAttribute("fill", "yellow");
+        } else if (playerLife > 0 && playerLife < 30) {
+            progressRatio.setAttribute("width", playerLife * 2);
+            progressRatio.setAttribute("fill", "red");
+        } else {
+            progressRatio.setAttribute("width", "0");
+        }
+        return;
+    }
+    scoreBoard = document.getElementById("scoreBoard");
     var playerLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
     playerLabel.setAttribute("x", "50");
     playerLabel.setAttribute("y", "33");
@@ -24,7 +44,7 @@ function drawScoreBoard(playerName, playerScore, playerLife) {
     name.setAttribute("fill", "#A70");
     name.textContent = playerName;
 
-    var score = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    score = document.createElementNS("http://www.w3.org/2000/svg", "text");
     score.setAttribute("x", "400");
     score.setAttribute("y", "33");
     score.setAttribute("fill", "#A70");
@@ -42,27 +62,15 @@ function drawScoreBoard(playerName, playerScore, playerLife) {
     progress.setAttribute("fill", "none");
 
 
-    var progressRatio = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    progressRatio = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     progressRatio.setAttribute("x", "641");
     progressRatio.setAttribute("y", "18");
     progressRatio.setAttribute("height", "16");
     progressRatio.setAttribute("rx", "4");
     progressRatio.setAttribute("ry", "4");
-    if (playerLife > 60) {
-        progressRatio.setAttribute("width", playerLife * 2 - 2);
-        progressRatio.setAttribute("fill", "green");
-    } else if (playerLife >= 30 && playerLife <= 60) {
-        progressRatio.setAttribute("width", playerLife * 2);
-        progressRatio.setAttribute("fill", "yellow");
-    } else if (playerLife > 0 && playerLife < 30) {
-        progressRatio.setAttribute("width", playerLife * 2);
-        progressRatio.setAttribute("fill", "red");
-    } else {
-        progressRatio.setAttribute("width", "0");
-    }
+    progressRatio.setAttribute("width", playerLife * 2 - 2);
+    progressRatio.setAttribute("fill", "green");
 
-
-    
     scoreBoard.appendChild(playerLabel);
     scoreBoard.appendChild(scoreLabel);
     scoreBoard.appendChild(lifeLabel);
@@ -88,10 +96,9 @@ function drawLeggendBoard() {
 }
 
 function playChangeScoreSound() {
-    var sound = new Audio('change-score.mp3');
+    var sound = new Audio('sound/change-score.mp3');
     sound.play();
 }
 
 drawScoreBoard(player.name, player.score, player.life);
 drawLeggendBoard();
-playChangeScoreSound()

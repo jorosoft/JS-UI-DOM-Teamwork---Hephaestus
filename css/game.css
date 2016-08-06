@@ -13,7 +13,7 @@ body {
     height: 640px;
     border: 2px solid red;
     z-index: 10;
-    margin-left: 20%;
+    margin-left: 14%;
 }
 
 #game-background {
@@ -24,7 +24,7 @@ body {
     height: 640px;
     border: 2px solid yellow;
     z-index: 0;
-    margin-left: 20%;
+    margin-left: 14%;
 }
 
 #wrapper {
@@ -54,8 +54,8 @@ h1 {
     width: 960px;
     height: 50px;
     background-color: lightgray;
-    margin-top: 5%;
-    margin-left: 19%;
+    margin-top: 1%;
+    margin-left: 7%;
 }
 
 #scoreBoard text {
@@ -69,8 +69,8 @@ h1 {
     width: 960px;
     height: 30px;
     background-color: lightgray;
-    margin-top: 49%;
-    margin-left: 22%;
+    margin-top: 48%;
+    margin-left: 17%;
 }
 
 #legendBoard text {
