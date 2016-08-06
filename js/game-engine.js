@@ -4,7 +4,6 @@ var ctxGameField = gameField.getContext("2d");
 //var ctxBackground = background.getContext("2d");
 
 var enemies = [],
-    projectiles = [],
     players = [],
     factoryInit = spaceImpactFactory(),
     player = factoryInit.getPlayer("Strahil", 10, 60),
@@ -35,7 +34,7 @@ explosion.src = "images/explosion.jpg";
 
 
 if (!Array.prototype.remove) {
-    Array.prototype.remove = function(val, all) {
+    Array.prototype.remove = function (val, all) {
         var i, removedItems = [];
         if (all) {
             for (i = this.length; i -= 1;) {
@@ -48,11 +47,29 @@ if (!Array.prototype.remove) {
         return removedItems;
     };
 }
+window.onload = function () {
+    drawShip(shipImg, player.positionX, player.positionY, 50, 20);
+    players.push(player);
+    multipleEnemies();
+}
 
+function multipleEnemies() {
+    count = 0;
+    function invokeEnemy() {
+        if (count % 280 == 0) {
+            if (enemies.length < 4) {
+                var enemy = enemyType();
+                enemies.push(enemy);
+                console.log(enemies.length);
+            }
+        }
+        count++;
+        window.requestAnimationFrame(invokeEnemy);
+    }
+    invokeEnemy();
+}
 
 function gameInit() {
-
-    //
 
 }
 
@@ -92,7 +109,7 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
         count = 0,
         index = 1,
         attackRatio = 0,
-        slow;
+        speed;
 
     function performEnemyMove() {
         if (enemy.life <= 0 || enemy.positionX < -100) {
@@ -104,11 +121,11 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
                     drawShip(image, enemy.positionX, enemy.positionY, sizeX, sizeY);
                     enemy.positionX -= step;
                     speed = 0;
-                    if (attackRatio  % 50 === 0) {
-                        var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY);
+                    if (attackRatio % 50 === 0) {
+                        var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY, enemy);
                         enemyAttackHandler(newProjectile);
                     }
-                    attackRatio+=1;
+                    attackRatio += 1;
                     break;
                 case 2:
                     ctxGameField.clearRect(enemy.positionX, enemy.positionY + 1, 22, 9);
@@ -132,7 +149,7 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
                     break;
             }
 
-            setTimeout(function() {
+            setTimeout(function () {
                 window.requestAnimationFrame(performEnemyMove);
             }, speed);
         }
@@ -140,18 +157,10 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
     window.requestAnimationFrame(performEnemyMove);
 }
 
-window.onload = function() {
-    var enemy = enemyType();
-    drawShip(shipImg, player.positionX, player.positionY, 50, 20);
-    enemies.push(enemy);
-    players.push(player);
-}
-
-
 executeCommand();
 
 function executeCommand() {
-    document.body.addEventListener('keydown', function(ev) {
+    document.body.addEventListener('keydown', function (ev) {
         switch (ev.keyCode) {
             case 83:
                 moveShip(player, "down");
@@ -186,8 +195,7 @@ function executeCommand() {
                 drawShip(shipImg, player.positionX, player.positionY, 50, 20);
                 break;
             case 13:
-                var newProjectile = new projectile(player.positionX + 50, player.positionY); // magic number center the projectile around the ship.
-                projectiles.push(newProjectile);
+                var newProjectile = new projectile(player.positionX + 50, player.positionY, player); // magic number center the projectile around the ship.
                 playerAttackHandler(newProjectile);
                 break;
             default:
@@ -196,9 +204,10 @@ function executeCommand() {
     });
 }
 
-function projectile(x, y) {
+function projectile(x, y, parent) {
     this.x = x;
     this.y = y;
+    this.parent = parent;
 }
 
 function drawShip(img, x, y, sizeX, sizeY) {
@@ -230,32 +239,45 @@ function playerAttackHandler(args) {
         else {
             ctxGameField.clearRect(args.x, args.y + 5, 22, 9);
             ctxGameField.drawImage(bullet, args.x + 2, args.y + 5, 20, 8);
-            args.x += step ;
+            args.x += step;
             window.requestAnimationFrame(performAttack);
         }
     }
-    window.requestAnimationFrame(performAttack);
+    performAttack();
 }
 
-function enemyAttackHandler(args) {
+function enemyAttackHandler(projectile) {
     var step = 1;
+    var count = 1;
 
     function performAttack() {
-        if (enemyProjectileHit(players, args) === true || args.x > gameField.width) {
-            drawExplosion(args.x, args.y);
+        var projectileHitInfo = enemyProjectileHit(player, projectile);
+        if (projectile.x < -50) {
             window.cancelAnimationFrame(performAttack);
-        } else {
-            ctxGameField.clearRect(args.x, args.y + 5, 22, 9);
-            ctxGameField.drawImage(bullet, args.x - 2, args.y + 5, 20, 8);
-            args.x -= step + 3;
-            window.requestAnimationFrame(performAttack);
+        }
+        else {
+            if (projectileHitInfo.isHit === true) {
+                player.life -= player.attack;
+
+                ctxGameField.clearRect(projectile.x, projectile.y + 5, 22, 9);
+                ctxGameField.drawImage(shipImg, player.positionX, player.positionY, 50, 20);
+                if (player.life <= 0) {
+                    drawExplosion(projectileHitInfo.positionX, projectileHitInfo.positionY);
+                    player.positionX = 9999;
+                    player.positionY = 2000;
+                    console.log("Game over");
+                }
+                window.cancelAnimationFrame(performAttack);
+            }
+            else {
+                ctxGameField.clearRect(projectile.x, projectile.y + 5, 22, 9);
+                ctxGameField.drawImage(bullet, projectile.x - 2, projectile.y + 5, 20, 8);
+                projectile.x -= step + 3;
+                window.requestAnimationFrame(performAttack);
+            }
         }
     }
-    window.requestAnimationFrame(performAttack);
-}
-
-function drawScore(args) {
-    console.log(player1.score);
+    performAttack();
 }
 
 function drawExplosion(x, y) {
@@ -270,7 +292,7 @@ function drawExplosion(x, y) {
         ctxGameField.clearRect(x, y, 45, 45);
         ctxGameField.drawImage(explosion, posx, posy, 45, 45, x, y, 45, 45); // magic numbers set the proper possition of explosion.
         if (count === 50) {
-            ctxGameField.clearRect(x,y,60,45);
+            ctxGameField.clearRect(x, y, 60, 45);
             window.cancelAnimationFrame(Animate);
         } else {
             count++;
@@ -278,7 +300,7 @@ function drawExplosion(x, y) {
         }
 
     }
-    window.requestAnimationFrame(Animate);
+    Animate();
 }
 
 function moveShip(args, dir) {
@@ -328,31 +350,29 @@ function projectileHit(enemies, projectile) {
     return false;
 }
 
-function enemyProjectileHit(enemies, projectile) {
-    for (var i = 0; i < enemies.length; i += 1) {
-        if (projectile.x == enemies[i].positionX + 20 && projectile.y == enemies[i].positionY) {
-            ctxGameField.clearRect(enemies[i].positionX + 20, enemies[i].positionY + 5, 45, 30); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
-            enemies[i].life -= 5;
-            if (enemies[i].life <= 0) {
-                enemies.remove(enemies[i]);
-            }
-            return true;
-        } else {
-            if (projectile.x <= enemies[i].positionX) // magic numbers set the range of shooting
+function enemyProjectileHit(player, projectile) {
+    if (projectile.x == player.positionX - 20 && projectile.y == player.positionY) {
+        return {
+            positionX: player.positionX,
+            positionY: player.positionY,
+            isHit: true
+        };
+    }
+    else {
+        if (projectile.x <= player.positionX) // magic numbers set the range of shooting
+        {
+            if (projectile.y < player.positionY + 20 && projectile.y > player.positionY - 20) // magic numbers set the y range of shooting.
             {
-                if (projectile.y < enemies[i].positionY + 20 && projectile.y > enemies[i].positionY - 20) // magic numbers set the y range of shooting.
-                {
-                    ctxGameField.clearRect(enemies[i].positionX - 20, enemies[i].positionY - 5, 100, 50); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
-                    enemies[i].life -= 5;
-                    if (enemies[i].life <= 0) {
-                        enemies.remove(enemies[i]);
-                    }
-                    return true;
-                }
+                return {
+                    positionX: player.positionX,
+                    positionY: player.positionY,
+                    isHit: true
+                };
             }
         }
     }
     return false;
+
 }
 
 //For ship can't go outside on canvas.
