@@ -311,6 +311,7 @@ function enemyProjectileHit(enemies, projectile) {
     for (var i = 0; i < enemies.length; i += 1) {
         if (projectile.x == enemies[i].directionX + 20 && projectile.y == enemies[i].directionY) {
             ctxGameField.clearRect(enemies[i].directionX + 20, enemies[i].directionY + 5, 45, 30); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
+            enemies[i].life -= 5;
             if (enemies[i].life <= 0) {
                 enemies.remove(enemies[i]);
             }
