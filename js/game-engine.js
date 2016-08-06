@@ -91,6 +91,7 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
     var step = 1,
         count = 0,
         index = 1,
+        attackRatio = 0,
         slow;
 
     function performEnemyMove() {
@@ -103,10 +104,11 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
                     drawShip(image, enemy.directionEnemyX, enemy.directionEnemyY, sizeX, sizeY);
                     enemy.directionEnemyX -= step;
                     slow = 0;
-                    if (enemy.directionEnemyX % 5 === 0) {
+                    if (attackRatio  % 50 === 0) {
                         var newProjectile = new projectile(enemy.directionEnemyX - 20, enemy.directionEnemyY);
                         enemyAttackHandler(newProjectile);
                     }
+                    attackRatio+=1;
                     break;
                 case 2:
                     ctxGameField.clearRect(enemy.directionEnemyX, enemy.directionEnemyY + 5, 22, 9);
@@ -134,7 +136,7 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
             }, slow);
         }
     }
-    performEnemyMove();
+    window.requestAnimationFrame(performEnemyMove);
 }
 
 window.onload = function() {
@@ -215,7 +217,7 @@ function playerAttackHandler(args) {
             window.requestAnimationFrame(performAttack);
         }
     }
-    performAttack();
+    window.requestAnimationFrame(performAttack);
 }
 
 function enemyAttackHandler(args) {
@@ -226,13 +228,13 @@ function enemyAttackHandler(args) {
             drawExplosion(args.x, args.y);
             window.cancelAnimationFrame(performAttack);
         } else {
-            ctxGameField.clearRect(args.x - 30, args.y + 5, 22, 9);
-            ctxGameField.drawImage(bullet, args.x - 30, args.y + 5, 20, 8);
-            args.x -= step * 2;
+            ctxGameField.clearRect(args.x, args.y + 5, 22, 9);
+            ctxGameField.drawImage(bullet, args.x - 2, args.y + 5, 20, 8);
+            args.x -= step + 3;
             window.requestAnimationFrame(performAttack);
         }
     }
-    performAttack();
+    window.requestAnimationFrame(performAttack);
 }
 
 function drawScore(args) {
@@ -245,20 +247,21 @@ function drawExplosion(x, y) {
     var posy;
 
     function Animate() {
-        window.requestAnimationFrame(Animate);
         posx = (count % 5) * 45;
         posy = Math.floor(count / 5) * 45;
 
         ctxGameField.clearRect(x, y, 45, 45);
         ctxGameField.drawImage(explosion, posx, posy, 45, 45, x, y, 45, 45); // magic numbers set the proper possition of explosion.
         if (count === 50) {
+            ctxGameField.clearRect(x,y,60,45);
             window.cancelAnimationFrame(Animate);
         } else {
             count++;
+            window.requestAnimationFrame(Animate);
         }
 
     }
-    Animate();
+    window.requestAnimationFrame(Animate);
 }
 
 function moveShip(args, dir) {
@@ -306,14 +309,14 @@ function playerProjectileHit(enemies, projectile) {
 
 function enemyProjectileHit(enemies, projectile) {
     for (var i = 0; i < enemies.length; i += 1) {
-        if (projectile.x == enemies[i].directionX - 20 && projectile.y == enemies[i].directionY) {
-            ctxGameField.clearRect(enemies[i].directionX - 20, enemies[i].directionY - 5, 45, 30); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
+        if (projectile.x == enemies[i].directionX + 20 && projectile.y == enemies[i].directionY) {
+            ctxGameField.clearRect(enemies[i].directionX + 20, enemies[i].directionY + 5, 45, 30); // magic number -5 because when bullet hits top wing its one half is -5 before y. Other numbers set the clear range..
             if (enemies[i].life <= 0) {
                 enemies.remove(enemies[i]);
             }
             return true;
         } else {
-            if (projectile.x >= enemies[i].directionX) // magic numbers set the range of shooting
+            if (projectile.x <= enemies[i].directionX) // magic numbers set the range of shooting
             {
                 if (projectile.y < enemies[i].directionY + 20 && projectile.y > enemies[i].directionY - 20) // magic numbers set the y range of shooting.
                 {
