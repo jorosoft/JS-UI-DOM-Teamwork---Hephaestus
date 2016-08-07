@@ -13,9 +13,10 @@ body {
     height: 640px;
     border: 2px solid red;
     z-index: 10;
+    margin-left: 14%;
 }
 
-#game-background{
+#game-background {
     /*display: none*/
     position: absolute;
     left: 50px;
@@ -23,6 +24,7 @@ body {
     height: 640px;
     border: 2px solid yellow;
     z-index: 0;
+    margin-left: 14%;
 }
 
 #wrapper {
@@ -44,4 +46,34 @@ button {
 
 h1 {
     text-align: center;
+}
+
+#scoreBoard {
+    border: 1px solid gray;
+    border-radius: 10px;
+    width: 960px;
+    height: 50px;
+    background-color: lightgray;
+    margin-top: 1%;
+    margin-left: 7%;
+}
+
+#scoreBoard text {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#legendBoard {
+    border: 1px solid gray;
+    border-radius: 10px;
+    width: 960px;
+    height: 30px;
+    background-color: lightgray;
+    margin-top: 48%;
+    margin-left: 17%;
+}
+
+#legendBoard text {
+    font-size: 14px;
+    font-weight: bold;
 }

@@ -3,7 +3,7 @@ var spaceImpactFactory = function () {
     var player = (function () {
         var defaultPlayerScore = 0;
         defaultPlayerAttack = 2,
-        defaultPlayerLife = 5;
+        defaultPlayerLife = 100;
         player = Object.create({});
 
         Object.defineProperty(player, "init", {
@@ -86,13 +86,15 @@ var spaceImpactFactory = function () {
         enemy = Object.create({});
 
         Object.defineProperty(enemy, "init", {
-            value: function (life, attack, addScoreToPlayer, positionX, positionY, enemyType) {
+            value: function (life, attack, addScoreToPlayer, positionX, positionY, enemyType, width, height) {
                 this.life = life;
                 this.attack = attack;
                 this.addScoreToPlayer = addScoreToPlayer;
                 this.positionX = positionX;
                 this.positionY = positionY;
                 this.enemyType = enemyType;
+                this.width = width;
+                this.height = height;
 
                 return this;
             }
@@ -152,6 +154,24 @@ var spaceImpactFactory = function () {
             }
         });
 
+        Object.defineProperty(enemy, "width", {
+            get: function () {
+                return this._width;
+            },
+            set: function (val) {
+                this._width = val;
+            }
+        });
+
+        Object.defineProperty(enemy, "height", {
+            get: function () {
+                return this._height;
+            },
+            set: function (val) {
+                this._height = val;
+            }
+        });
+
         return enemy;
     }());
 
@@ -192,12 +212,11 @@ var spaceImpactFactory = function () {
         getPlayer: function (name, positionX, positionY) {
             return Object.create(player).init(name, positionX, positionY);
         },
-        getEnemy: function (life, attack, addScoreToPlayer, positionX, positionY, enemyType) {
-            return Object.create(enemy).init(life, attack, addScoreToPlayer, positionX, positionY, enemyType);
+        getEnemy: function (life, attack, addScoreToPlayer, positionX, positionY, enemyType, width, height) {
+            return Object.create(enemy).init(life, attack, addScoreToPlayer, positionX, positionY, enemyType, width, height);
         },
         getField: function (positionX, positionY) {
             return Object.create(field).init(positionX, positionY);
         }
     }
 }
-
