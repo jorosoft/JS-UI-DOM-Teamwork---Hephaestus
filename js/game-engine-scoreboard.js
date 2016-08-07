@@ -24,31 +24,19 @@ function drawScoreBoard(playerName, playerScore, playerLife) {
     playerLabel.setAttribute("x", "50");
     playerLabel.setAttribute("y", "33");
     playerLabel.setAttribute("fill", "#070");
-<<<<<<< HEAD
     playerLabel.textContent = "Player:";
-=======
-    playerLabel.textContent = "player:";
->>>>>>> origin/master
 
     var scoreLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
     scoreLabel.setAttribute("x", "330");
     scoreLabel.setAttribute("y", "33");
     scoreLabel.setAttribute("fill", "#070");
-<<<<<<< HEAD
     scoreLabel.textContent = "Score:";
-=======
-    scoreLabel.textContent = "score:";
->>>>>>> origin/master
 
     var lifeLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
     lifeLabel.setAttribute("x", "586");
     lifeLabel.setAttribute("y", "33");
     lifeLabel.setAttribute("fill", "#070");
-<<<<<<< HEAD
     lifeLabel.textContent = "Life:";
-=======
-    lifeLabel.textContent = "life:";
->>>>>>> origin/master
 
     var name = document.createElementNS("http://www.w3.org/2000/svg", "text");
     name.setAttribute("x", "136");
