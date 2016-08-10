@@ -4,9 +4,9 @@ var topPlayers = document.getElementById("high-score");
 var backButton = document.getElementById("back-button");
 var HighScoreButton = document.getElementById("high-score-button");
 
-function showCanvas() {
-    gameField.style.display = "block";
-    gameInit();
+function startGame() {
+    gameField.style.display = "block"
+   
 }
 
 function showHighScore() {
@@ -20,5 +20,5 @@ function hideHighScore() {
 }
 
 HighScoreButton.addEventListener("click", showHighScore, false);
-startButton.addEventListener("click", showCanvas, false);
+startButton.addEventListener("click", startGame, false);
 backButton.addEventListener("click", hideHighScore, false);
