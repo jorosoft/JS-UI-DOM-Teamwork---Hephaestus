@@ -144,7 +144,7 @@ function enemyType() {
         enemyCount += 1;
 
     } else if (enemyCount === 50) {
-        boss = factoryInit.getEnemy()
+        boss = factoryInit.getEnemy(100, 30, 5000, 250, 50, 4, 70, 70);
 
     } else {
         enemyThree = factoryInit.getEnemy(10, 1, 150, 250, randomPosition, typeofEnemy, 50, 20);
@@ -381,10 +381,11 @@ function gameOver(x, y) {
     player.positionY = 9000;
     localStorage.setItem("name", player.name);
     localStorage.setItem("score", player.score);
-    window.alert("Game over");
     window.cancelAnimationFrame(render);
-    gameField.parentNode.removeChild(gameField);
-    background.parentNode.removeChild(background);
+    window.setTimeout(function () {
+        gameField.parentNode.removeChild(gameField);
+        background.parentNode.removeChild(background);
+    }, 800);
 }
 
 function drawExplosion(x, y) {
