@@ -95,10 +95,5 @@ function drawLeggendBoard() {
     leggendBoard.appendChild(text);
 }
 
-function playChangeScoreSound() {
-    var sound = new Audio('sound/change-score.mp3');
-    sound.play();
-}
-
 drawScoreBoard(player.name, player.score, player.life);
 drawLeggendBoard();

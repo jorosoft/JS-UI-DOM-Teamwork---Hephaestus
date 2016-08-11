@@ -11,7 +11,7 @@ var enemies = [],
     enemyOne,
     enemyTwo,
     enemyThree,
-    enemyCount;
+    enemyCount = 0;
 
 var backgroundImg = new Image();
 backgroundImg.src = "images/space.jpg";
@@ -28,6 +28,9 @@ enemyImgTwo.src = "images/enemy2.png";
 var enemyImgThree = new Image();
 enemyImgThree.src = "images/enemy3.png";
 
+var bossImg = new Image();
+bossImg.src = "images/boss.png"
+
 var bullet = new Image();
 bullet.src = "images/bullet.png";
 
@@ -42,6 +45,12 @@ projectileEnemyTwoImg.src = "images/projectile2.png";
 
 var projectileEemyThreeImg = new Image();
 projectileEemyThreeImg.src = "images/projectile3.png";
+
+var startImage = new Image();
+startImage.src = "images/start.png"
+startImage.onload = function () {
+    ctxBackground.drawImage(startImage,0,0,300,200);
+}
 
 if (!Array.prototype.remove) {
     Array.prototype.remove = function (val, all) {
@@ -86,15 +95,21 @@ function render() {
     scrollVal += speed;
     ctxBackground.drawImage(backgroundImg, -scrollVal, 0, imgWidth, imgHeight);
     ctxBackground.drawImage(backgroundImg, canvasWidth - scrollVal, 0, imgWidth, imgHeight);
-
-    setTimeout(function () { render(); }, 20);
+    if (player.life > 0) {
+        window.requestAnimationFrame(render);
+    }
 }
 
-window.onload = function () {
-    drawShip(shipImg, player.positionX, player.positionY, 50, 20);
-    players.push(player);
-    multipleEnemies();
-    loadImage();
+var flag = false;
+function startLala() {
+    if (flag === false) {
+        drawShip(shipImg, player.positionX, player.positionY, 50, 20);
+        players.push(player);
+        multipleEnemies();
+        loadImage();
+        executeCommand();
+    }
+    flag = true;
 }
 
 function multipleEnemies() {
@@ -105,7 +120,6 @@ function multipleEnemies() {
             if (enemies.length < 4) {
                 var enemy = enemyType();
                 enemies.push(enemy);
-                console.log(enemies.length);
             }
         }
         count++;
@@ -115,18 +129,19 @@ function multipleEnemies() {
 }
 
 backgroundImg.onload = function () {
-    // create pattern
     var ptrn = ctxBackground.createPattern(backgroundImg, 'repeat'); // Create a pattern with this image, and set it to "repeat".
     ctxBackground.fillStyle = ptrn;
     ctxBackground.fillRect(0, 0, 960, 640); // context.fillRect(x, y, width, height);
 }
 
-enemyCount = 0;
-
 function enemyType() {
-    var typeofEnemy = Math.floor(Math.random() * (3 - 1 + 1)) + 1,
+    var typeofEnemy,
         randomPosition = Math.floor(Math.random() * (100 - 1 + 1)) + 1;
-
+    if (enemyCount === 2) {
+        typeofEnemy = 4;
+    } else {
+        typeofEnemy = Math.floor(Math.random() * (3 - 1 + 1)) + 1
+    }
 
     if (typeofEnemy === 1) {
         enemyOne = factoryInit.getEnemy(5, 20, 50, 250, randomPosition, typeofEnemy, 20, 20);
@@ -142,9 +157,13 @@ function enemyType() {
         enemyCount += 1;
         return enemyTwo;
 
-    } else if (enemyCount === 50) {
-        boss = factoryInit.getEnemy(100, 30, 5000, 250, 50, 4, 70, 70);
-
+    } else if (typeofEnemy === 4) {
+        boss = factoryInit.getEnemy(100, 30, 5000, 230, 50, 4, 70, 70);
+        moveEnemy(boss, boss.width, boss.height, bossImg);
+        boss.enemyType = 4;
+        console.log("tuk sum");
+        enemies.push({}, {}, {}, {});
+        return boss;
     } else {
         enemyThree = factoryInit.getEnemy(10, 1, 150, 250, randomPosition, typeofEnemy, 50, 20);
         moveEnemy(enemyThree, enemyThree.width, enemyThree.height, enemyImgThree);
@@ -218,6 +237,13 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
 
                     attackRatio3 += 1;
                     break;
+                case 4:
+                    ctxGameField.clearRect(enemy.positionX, enemy.positionY, enemy.width, enemy.height);
+                    //enemy.positionX -= step;
+                    drawShip(image, enemy.positionX, enemy.positionY, sizeX, sizeY);
+
+                    speed = 100
+                    break;
                 default:
                     break;
             }
@@ -229,8 +255,6 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
     }
     window.requestAnimationFrame(performEnemyMove);
 }
-
-executeCommand();
 
 function executeCommand() {
     document.body.addEventListener('keydown', function (ev) {
@@ -320,7 +344,6 @@ function drawShip(img, x, y, sizeX, sizeY) {
     ctxGameField.drawImage(img, x, y, sizeX, sizeY);
 }
 
-
 function playerAttackHandler(projectile) {
     var step = 1;
     var i = 1;
@@ -389,14 +412,14 @@ function gameOver(x, y) {
     drawExplosion(x, y)
     player.positionX = 9999;
     player.positionY = 9000;
-    if (localStorage && localStorage.score < player.score) {
+    if ( localStorage.score < player.score) {
         localStorage.setItem("name", player.name);
         localStorage.setItem("score", player.score);
-    }
-    window.cancelAnimationFrame(render);
+    } 
+
     window.setTimeout(function () {
         gameField.parentNode.removeChild(gameField);
-        background.parentNode.removeChild(background);
+        backgroundImg.src = "images/game over.gif";
     }, 800);
 }
 
@@ -444,7 +467,7 @@ function moveShip(args, dir) {
 
 function enemyProjectileHit(player, projectile) {
     if (projectile.x < player.positionX + 50 && projectile.x + 25 > player.positionX &&
-            projectile.y < player.positionY + 15 && projectile.y + 15 > player.positionY) {
+        projectile.y < player.positionY + 15 && projectile.y + 15 > player.positionY) {
         return {
             positionX: player.positionX,
             positionY: player.positionY,
