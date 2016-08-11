@@ -190,8 +190,11 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
                         index *= -1;
                     }
                     speed = 100;
-                    //var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY, enemy);
-                    //enemyAttackHandler(newProjectile, enemy);
+                    if (count > 5 || count < -5)
+                    {
+                    var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY, enemy);
+                    enemyAttackHandler(newProjectile, enemy);
+                    }
                     break;
                 case 3:
                     ctxGameField.clearRect(enemy.positionX, enemy.positionY, 22, 9);
@@ -200,8 +203,8 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
                     drawShip(image, enemy.positionX, enemy.positionY, sizeX, sizeY);
 
                     speed = 100
-                    //var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY, enemy);
-                    //enemyAttackHandler(newProjectile, enemy);
+                    var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY, enemy);
+                    enemyAttackHandler(newProjectile, enemy);
                     break;
                 default:
                     break;
@@ -361,6 +364,7 @@ function enemyAttackHandler(projectile, enemy) {
                 ctxGameField.clearRect(projectile.x, projectile.y + 5, 22, 9);
                 ctxGameField.drawImage(shipImg, player.positionX, player.positionY, 50, 20);
                 if (player.life <= 0) {
+                    ctxGameField.clearRect(player.positionX,player.positionY,50,20);
                     gameOver(projectileHitInfo.positionX, projectileHitInfo.positionY);
                 }
                 window.cancelAnimationFrame(performAttack);
@@ -433,27 +437,15 @@ function moveShip(args, dir) {
 }
 
 function enemyProjectileHit(player, projectile) {
-    if (projectile.x == player.positionX - 20 && projectile.y == player.positionY) {
-        return {
-            positionX: player.positionX,
-            positionY: player.positionY,
-            isHit: true
-        };
-    } else {
-        if (projectile.x <= player.positionX) // magic numbers set the range of shooting
-        {
-            if (projectile.y < player.positionY + 20 && projectile.y > player.positionY - 20) // magic numbers set the y range of shooting.
-            {
-                return {
-                    positionX: player.positionX,
-                    positionY: player.positionY,
-                    isHit: true
-                };
-            }
+    if (projectile.x < player.positionX + 50 && projectile.x + 25 > player.positionX &&
+            projectile.y < player.positionY + 15 && projectile.y + 15 > player.positionY) {
+            return {
+                positionX: player.positionX,
+                positionY: player.positionY,
+                isHit: true
+            };
         }
-    }
     return false;
-
 }
 
 //For ship can't go outside on canvas.
