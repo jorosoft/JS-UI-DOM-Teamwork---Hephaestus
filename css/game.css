@@ -1,14 +1,21 @@
+@font-face {
+    font-family: "SpaceFont";
+    src: url(../fonts/space-age.ttf);
+}
+
 body {
-    /*background-image: url("../images/space.jpg");
-    background-color: black;*/
     margin: 0;
     padding: 0;
+}
+
+h1 {
+    font-family: "SpaceFont";
+    font-size: 36px;
 }
 
 #game-field {
     /*display: none*/
     position: absolute;
-    left: 14%;
     width: 960px;
     height: 640px;
     border: 2px solid red;
@@ -18,18 +25,16 @@ body {
 #game-background {
     /*display: none*/
     position: absolute;
-    left: 14%;
     width: 960px;
     height: 640px;
     border: 2px solid yellow;
     z-index: 0;
-    padding-left: 0;
 }
 
 #wrapper {
     position: relative;
-    margin-left: 1%;
-    text-align: center;
+    width: 960px;
+    margin-left: 15%;
 }
 
 button {
@@ -50,7 +55,6 @@ h1 {
 
 #scoreBoard {
     display: block;
-    margin-left: 14%;
     border: 1px solid gray;
     border-radius: 10px;
     width: 960px;
@@ -64,9 +68,8 @@ h1 {
 }
 
 #legendBoard {
-    margin-top: 48%;
-    margin-left: 14%;
     display: block;
+    margin-top: 645px;
     border: 1px solid gray;
     border-radius: 10px;
     width: 960px;
