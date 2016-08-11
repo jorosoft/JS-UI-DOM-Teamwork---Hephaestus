@@ -29,7 +29,7 @@ QUnit.test("GameEngine_enemyProjectileHit_ShouldReturnTrueWithCorrectParameters"
     assert.ok(result);
 });
 
-QUnit.test("GameEngine_enemyProjectileHit_ShouldReturnTrueWithIncorrectParameters", function(assert) {
+QUnit.test("GameEngine_enemyProjectileHit_ShouldReturnFalseWithIncorrectParameters", function(assert) {
     var testFactory = spaceImpactFactory(),
         testPlayer = testFactory.getPlayer("Mincho", 10, 60),
         testProjectile = new projectile(100, 600);

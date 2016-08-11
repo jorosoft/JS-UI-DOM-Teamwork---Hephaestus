@@ -34,6 +34,15 @@ bullet.src = "images/bullet.png";
 var explosion = new Image();
 explosion.src = "images/explosion1.png";
 
+var projectileEnemyOneImg = new Image();
+projectileEnemyOneImg.src = "images/projectile1.png";
+
+var projectileEnemyTwoImg = new Image();
+projectileEnemyTwoImg.src = "images/projectile2.png";
+
+var projectileEemyThreeImg = new Image();
+projectileEemyThreeImg.src = "images/projectile3.png";
+
 
 if (!Array.prototype.remove) {
     Array.prototype.remove = function (val, all) {
@@ -42,7 +51,7 @@ if (!Array.prototype.remove) {
             for (i = this.length; i -= 1;) {
                 if (this[i] === val) removedItems.push(this.splice(i, 1));
             }
-        } else { 
+        } else {
             i = this.indexOf(val);
             if (i > -1) removedItems = this.splice(i, 1);
         }
@@ -155,7 +164,9 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
     var step = 1,
         count = 0,
         index = 1,
-        attackRatio = 0,
+        attackRatio1 = 0,
+        attackRatio2 = 0,
+        attackRatio3 = 0,
         speed;
 
     function performEnemyMove() {
@@ -165,21 +176,21 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
         } else {
             switch (enemy.enemyType) {
                 case 1:
-                    ctxGameField.clearRect(enemy.positionX, enemy.positionY + 1, 22, 9);
-                    ctxGameField.clearRect(enemy.positionX, enemy.positionY, enemy.width,enemy.height);
+                    ctxGameField.clearRect(enemy.positionX, enemy.positionY + 1, 27, 16);
+                    ctxGameField.clearRect(enemy.positionX, enemy.positionY, enemy.width, enemy.height);
                     enemy.positionX -= step;
                     drawShip(image, enemy.positionX, enemy.positionY, sizeX, sizeY);
 
                     speed = 0;
-                    if (attackRatio % 50 === 0) {
+                    if (attackRatio1 % 50 === 0) {
                         var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY, enemy);
-                        enemyAttackHandler(newProjectile, enemy);
+                        enemyAttackHandler(newProjectile, enemy, projectileEnemyOneImg, 25, 15);
                     }
-                    attackRatio += 1;
+                    attackRatio1 += 1;
                     break;
                 case 2:
-                    ctxGameField.clearRect(enemy.positionX, enemy.positionY + 1, 22, 9);
-                    ctxGameField.clearRect(enemy.positionX, enemy.positionY, enemy.width,enemy.height);
+                    ctxGameField.clearRect(enemy.positionX, enemy.positionY + 1, 52, 13);
+                    ctxGameField.clearRect(enemy.positionX, enemy.positionY, enemy.width, enemy.height);
                     enemy.positionX -= step;
                     enemy.positionY += count;
                     drawShip(image, enemy.positionX, enemy.positionY, sizeX, sizeY);
@@ -190,18 +201,28 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
                         index *= -1;
                     }
                     speed = 100;
-                    //var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY, enemy);
-                    //enemyAttackHandler(newProjectile, enemy);
+
+                    if (attackRatio2 % 35 === 0) {
+                        var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY, enemy);
+                        enemyAttackHandler(newProjectile, enemy, projectileEnemyTwoImg, 50, 12);
+                    }
+
+                    attackRatio2 += 1;
                     break;
                 case 3:
-                    ctxGameField.clearRect(enemy.positionX, enemy.positionY, 22, 9);
-                    ctxGameField.clearRect(enemy.positionX, enemy.positionY, enemy.width,enemy.height);
+                    ctxGameField.clearRect(enemy.positionX, enemy.positionY, 57, 16);
+                    ctxGameField.clearRect(enemy.positionX, enemy.positionY, enemy.width, enemy.height);
                     enemy.positionX -= step;
                     drawShip(image, enemy.positionX, enemy.positionY, sizeX, sizeY);
 
                     speed = 100
-                    //var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY, enemy);
-                    //enemyAttackHandler(newProjectile, enemy);
+
+                    if (attackRatio3 % 40 === 0) {
+                        var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY, enemy);
+                        enemyAttackHandler(newProjectile, enemy, projectileEemyThreeImg, 55, 15);
+                    }
+
+                    attackRatio3 += 1;
                     break;
                 default:
                     break;
@@ -305,11 +326,6 @@ function drawShip(img, x, y, sizeX, sizeY) {
     ctxGameField.drawImage(img, x, y, sizeX, sizeY);
 }
 
-function drawProjectile(x, y) {
-    ctxGameField.clearRect(x, y + 5, 22, 9);
-    ctxGameField.drawImage(bullet, x, y, 20, 8);
-}
-
 function playerAttackHandler(projectile) {
     var step = 1;
     var i = 1;
@@ -324,7 +340,7 @@ function playerAttackHandler(projectile) {
                 drawScoreBoard(player.name, player.score, player.life);
                 if (enemies[projectileHitInfo.index].life <= 0) {
                     drawExplosion(projectileHitInfo.positionX, projectileHitInfo.positionY);
-                    ctxGameField.clearRect(enemies[projectileHitInfo.index].positionX,enemies[projectileHitInfo.index].positionY,enemies[projectileHitInfo.index].width,enemies[projectileHitInfo.index].height);
+                    ctxGameField.clearRect(enemies[projectileHitInfo.index].positionX, enemies[projectileHitInfo.index].positionY, enemies[projectileHitInfo.index].width, enemies[projectileHitInfo.index].height);
                     player.score += enemies[projectileHitInfo.index].addScoreToPlayer;
                     drawScoreBoard(player.name, player.score, player.life);
                     enemies.splice(projectileHitInfo.index, 1);
@@ -344,7 +360,7 @@ function playerAttackHandler(projectile) {
     performAttack();
 }
 
-function enemyAttackHandler(projectile, enemy) {
+function enemyAttackHandler(projectile, enemy, projectileImg, projectileSizeX, projectuleSizeY) {
     var step = 1;
     var count = 1;
 
@@ -355,18 +371,17 @@ function enemyAttackHandler(projectile, enemy) {
         } else {
             if (projectileHitInfo.isHit === true) {
                 player.life -= enemy.attack;
-                console.log("dadada" + enemy.attack);
 
                 drawScoreBoard(player.name, player.score, player.life);
-                ctxGameField.clearRect(projectile.x, projectile.y + 5, 22, 9);
+                ctxGameField.clearRect(projectile.x, projectile.y + 5, projectileSizeX + 2, projectuleSizeY + 1);
                 ctxGameField.drawImage(shipImg, player.positionX, player.positionY, 50, 20);
                 if (player.life <= 0) {
                     gameOver(projectileHitInfo.positionX, projectileHitInfo.positionY);
                 }
                 window.cancelAnimationFrame(performAttack);
             } else {
-                ctxGameField.clearRect(projectile.x, projectile.y + 5, 22, 9);
-                ctxGameField.drawImage(bullet, projectile.x - 2, projectile.y + 5, 20, 8);
+                ctxGameField.clearRect(projectile.x, projectile.y + 5, projectileSizeX + 2, projectuleSizeY + 1);
+                ctxGameField.drawImage(projectileImg, projectile.x - 2, projectile.y + 5, projectileSizeX, projectuleSizeY);
                 projectile.x -= step + 3;
                 window.requestAnimationFrame(performAttack);
             }
@@ -433,28 +448,18 @@ function moveShip(args, dir) {
 }
 
 function enemyProjectileHit(player, projectile) {
-    if (projectile.x == player.positionX - 20 && projectile.y == player.positionY) {
+    if (projectile.x < player.positionX + 50 && projectile.x + 25 > player.positionX &&
+            projectile.y < player.positionY + 15 && projectile.y + 15 > player.positionY) {
         return {
             positionX: player.positionX,
             positionY: player.positionY,
             isHit: true
         };
-    } else {
-        if (projectile.x <= player.positionX) // magic numbers set the range of shooting
-        {
-            if (projectile.y < player.positionY + 20 && projectile.y > player.positionY - 20) // magic numbers set the y range of shooting.
-            {
-                return {
-                    positionX: player.positionX,
-                    positionY: player.positionY,
-                    isHit: true
-                };
-            }
-        }
     }
     return false;
-
 }
+
+
 
 //For ship can't go outside on canvas.
 function RestrictionShip(x, y) {
