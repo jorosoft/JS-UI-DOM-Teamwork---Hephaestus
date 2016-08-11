@@ -179,6 +179,7 @@ function enemyType() {
 
 function moveEnemy(enemy, sizeX, sizeY, image) {
     var step = 1,
+        stepBoss=10,
         count = 0,
         index = 1,
         attackRatio1 = 0,
@@ -233,7 +234,7 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
                     enemy.positionX -= step;
                     drawShip(image, enemy.positionX, enemy.positionY, sizeX, sizeY);
 
-                    speed = 100
+                    speed = 100;
 
                     if (attackRatio3 % 40 === 0) {
                         var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY, enemy);
@@ -243,8 +244,10 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
                     attackRatio3 += 1;
                     break;
                 case 4:
+                    
                     ctxGameField.clearRect(enemy.positionX, enemy.positionY, enemy.width, enemy.height);
                     enemy.positionY -= count;
+                    enemy.positionX -= stepBoss;
                     drawShip(image, enemy.positionX, enemy.positionY, sizeX, sizeY);
 
                     count += index;
@@ -252,6 +255,10 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
                     if (count === 10 || count === -10) {
                         count = 0;
                         index *= -1;
+                    }
+
+                    if (enemy.positionX === 250 || enemy.positionX === 100) {
+                        stepBoss *= -1;
                     }
 
                     if (attackRatio4 % 33 === 0) {
