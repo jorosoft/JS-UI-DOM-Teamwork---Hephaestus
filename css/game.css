@@ -18,6 +18,15 @@ h1 {
     background-color: lightgray;
 }
 
+h1 {
+    font-family: "SpaceFont";
+    font-size: 36px;
+    text-align: center;
+    border: 1px solid gray;
+    border-radius: 10px;
+    background-color: lightgray;     
+}
+
 #game-field {
     /*display: none*/
     position: absolute;
@@ -35,14 +44,21 @@ h1 {
     height: 640px;
     border-radius: 10px;
     z-index: 0;
+<<<<<<< HEAD
     left: 0%;
+=======
+>>>>>>> origin/master
 }
 
 #wrapper {
     position: relative;
     width: 960px;
     margin-left: 25%;
+<<<<<<< HEAD
     text-align: center;
+=======
+    
+>>>>>>> origin/master
 }
 
 button {
@@ -54,6 +70,13 @@ button {
     display: none;
 }
 
+<<<<<<< HEAD
+=======
+#high-score {
+    display: none;
+}
+
+>>>>>>> origin/master
 #scoreBoard {
     display: block;
     border: 1px solid gray;
@@ -78,6 +101,7 @@ button {
     background-color: lightgray;
 }
 
+<<<<<<< HEAD
     #legendBoard text {
         font-size: 18px;
         font-weight: bold;
@@ -111,3 +135,9 @@ button {
         text-align: center;
     }
 }
+=======
+#legendBoard text {
+    font-size: 18px;
+    font-weight: bold;
+}
+>>>>>>> origin/master
