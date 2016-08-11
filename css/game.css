@@ -11,6 +11,10 @@ body {
 h1 {
     font-family: "SpaceFont";
     font-size: 36px;
+    text-align: center;
+    border: 1px solid gray;
+    border-radius: 10px;
+    background-color: lightgray;     
 }
 
 #game-field {
@@ -34,7 +38,7 @@ h1 {
 #wrapper {
     position: relative;
     width: 960px;
-    margin-left: 15%;
+    margin-left: 20%;
 }
 
 button {
@@ -47,10 +51,6 @@ button {
 
 #high-score {
     display: none;
-}
-
-h1 {
-    text-align: center;
 }
 
 #scoreBoard {
@@ -78,6 +78,6 @@ h1 {
 }
 
 #legendBoard text {
-    font-size: 14px;
+    font-size: 18px;
     font-weight: bold;
 }
