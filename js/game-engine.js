@@ -79,7 +79,7 @@ var canvasTemp = document.createElement("canvas"),
 
 function loadImage() {
     imgWidth = backgroundImg.width,
-    imgHeight = backgroundImg.height;
+       imgHeight = backgroundImg.height;
     canvasTemp.width = imgWidth;
     canvasTemp.height = imgHeight;
     render();
@@ -362,7 +362,6 @@ function playerAttackHandler(projectile) {
                     player.score += enemies[projectileHitInfo.index].addScoreToPlayer;
                     drawScoreBoard(player.name, player.score, player.life);
                     enemies.splice(projectileHitInfo.index, 1);
-                    //ctxGameField.clearRect(projectileHitInfo.positionX, projectileHitInfo.positionY, 22, 9);
                     ctxGameField.clearRect(projectile.x, projectile.y + 5, 22, 9);
                 }
                 window.cancelAnimationFrame(performAttack);
