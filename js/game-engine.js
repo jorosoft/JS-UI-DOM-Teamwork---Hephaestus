@@ -14,7 +14,7 @@ var enemies = [],
     enemyCount;
 
 var backgroundImg = new Image();
-backgroundImg.src = "images/space.png";
+backgroundImg.src = "images/space.jpg";
 
 var shipImg = new Image();
 shipImg.src = "images/ship.png";
@@ -23,7 +23,7 @@ var enemyImgOne = new Image();
 enemyImgOne.src = "images/enemy1.gif";
 
 var enemyImgTwo = new Image();
-enemyImgTwo.src = "images/enemy2.gif";
+enemyImgTwo.src = "images/enemy2.png";
 
 var enemyImgThree = new Image();
 enemyImgThree.src = "images/enemy3.png";
@@ -383,8 +383,10 @@ function gameOver(x, y) {
     drawExplosion(x, y)
     player.positionX = 9999;
     player.positionY = 9000;
-    localStorage.setItem("name", player.name);
-    localStorage.setItem("score", player.score);
+    if (localStorage && localStorage.score < player.score) {
+        localStorage.setItem("name", player.name);
+        localStorage.setItem("score", player.score);
+    }
     window.cancelAnimationFrame(render);
     window.setTimeout(function () {
         gameField.parentNode.removeChild(gameField);
