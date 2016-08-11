@@ -1,24 +1,24 @@
-var startButton = document.getElementById("start-button");
-var gameField = document.getElementById("game-field");
-var topPlayers = document.getElementById("high-score");
-var backButton = document.getElementById("back-button");
-var HighScoreButton = document.getElementById("high-score-button");
+var $startButton = $("#start-button"),
+    $gameField = $("#game-field"),
+    $topPlayers = $("#high-score"),
+    $backButton = $("#back-button"),
+    $HighScoreButton = $("#high-score-button");
 
 function startGame() {
-   gameField.style.display = "block";
-   startLala();
+    $gameField.css("display", "block");
+    gameInit();
 }
 
 function showHighScore() {
-    topPlayers.style.display = "block";
-    backButton.style.display = "block";
+    $topPlayers.css("display", "block");
+    $backButton.css("display", "inline-block");
 }
 
 function hideHighScore() {
-    topPlayers.style.display = "none";
-    backButton.style.display = "none";
+    $topPlayers.css("display", "none");
+    $backButton.css("display", "none");
 }
 
-HighScoreButton.addEventListener("click", showHighScore, false);
-startButton.addEventListener("click", startGame, false);
-backButton.addEventListener("click", hideHighScore, false);
+$HighScoreButton.on("click", showHighScore);
+$startButton.on("click", startGame);
+$backButton.on("click", hideHighScore);
