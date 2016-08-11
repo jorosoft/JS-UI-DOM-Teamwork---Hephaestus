@@ -489,10 +489,27 @@ function drawShipIsHit(x, y) {
             count++;
             window.requestAnimationFrame(AnimateShipIsHit);
         }
-    }
-    AnimateShipIsHit();
-}
 
+        let count = 0;
+
+        function AnimateShipIsHit() {
+
+
+            ctxGameField.clearRect(x, y, 50, 20);
+            ctxGameField.drawImage(shipIsHitImg, x, y, 50, 20);
+            if (count == 4) {
+                ctxGameField.clearRect(x, y, 50, 20);
+                ctxGameField.drawImage(shipImg, player.positionX, player.positionY, 50, 20);
+                window.cancelAnimationFrame(AnimateShipIsHit);
+            }
+            else {
+                count++;
+                window.requestAnimationFrame(AnimateShipIsHit);
+            }
+        }
+        AnimateShipIsHit();
+    }
+}
 function moveShip(player, dir) {
     switch (dir) {
         case "left":
