@@ -1,56 +1,61 @@
+@font-face {
+    font-family: "SpaceFont";
+    src: url(../fonts/space-age.ttf);
+}
+
 body {
-    /*background-image: url("../images/space.jpg");
-    background-color: black;*/
     margin: 0;
     padding: 0;
+    background-color: #9c9995;
+}
+
+h1 {
+    font-family: "SpaceFont";
+    font-size: 36px;
+    text-align: center;
+    border: 1px solid gray;
+    border-radius: 10px;
+    background-color: lightgray;
 }
 
 #game-field {
     /*display: none*/
     position: absolute;
-    left: 14%;
     width: 960px;
     height: 640px;
-    border: 2px solid red;
+    border-radius: 10px;
     z-index: 10;
+    left: 0%;
 }
 
 #game-background {
     /*display: none*/
     position: absolute;
-    left: 14%;
     width: 960px;
     height: 640px;
-    border: 2px solid yellow;
+    border-radius: 10px;
     z-index: 0;
-    padding-left: 0;
+    left: 0%;
 }
 
 #wrapper {
     position: relative;
-    margin-left: 1%;
+    width: 960px;
+    margin-left: 25%;
     text-align: center;
 }
 
 button {
-    background-color: #ff0000;
+    background-color: #a52a2a;
+    border-radius: 10px;
 }
 
 #back-button {
     display: none;
 }
 
-#high-score {
-    display: none;
-}
-
-h1 {
-    text-align: center;
-}
-
 #scoreBoard {
     display: block;
-    margin-left: 14%;
     border: 1px solid gray;
     border-radius: 10px;
     width: 960px;
@@ -58,15 +63,14 @@ h1 {
     background-color: lightgray;
 }
 
-#scoreBoard text {
-    font-size: 24px;
-    font-weight: bold;
-}
+    #scoreBoard text {
+        font-size: 24px;
+        font-weight: bold;
+    }
 
 #legendBoard {
-    margin-top: 48%;
-    margin-left: 14%;
     display: block;
+    margin-top: 645px;
     border: 1px solid gray;
     border-radius: 10px;
     width: 960px;
@@ -74,7 +78,36 @@ h1 {
     background-color: lightgray;
 }
 
-#legendBoard text {
-    font-size: 14px;
-    font-weight: bold;
+    #legendBoard text {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+@media only screen and (max-width:1368px) {
+    #game-field {
+        /*display: none*/
+        position: absolute;
+        width: 960px;
+        height: 640px;
+        border-radius: 10px;
+        z-index: 10;
+        left: 0%;
+    }
+
+    #game-background {
+        /*display: none*/
+        position: absolute;
+        width: 960px;
+        height: 640px;
+        border-radius: 10px;
+        z-index: 0;
+        left: 0%;
+    }
+
+    #wrapper {
+        position: relative;
+        width: 960px;
+        margin-left: 10%;
+        text-align: center;
+    }
 }

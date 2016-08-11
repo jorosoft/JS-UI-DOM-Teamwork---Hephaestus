@@ -4,28 +4,40 @@
 <head>
     <title>Space Impact</title>
     <link rel="stylesheet" href="css/game.css">
+    <script src="lib/jquery-3.1.0.min.js"></script>
 </head>
 
 <body>
     <div id="wrapper">
         <h1>Space Impact</h1>
-        <svg id="scoreBoard"></svg>
-        <div>
-            <canvas id="game-background" class="canvas"></canvas>
-        </div>
-
-        <div>
-            <canvas id="game-field" class="canvas"></canvas>
+        <div id"all-canvas">
+            <svg id="scoreBoard"></svg>
+            <div>
+                <canvas id="game-background" class="canvas"></canvas>
+            </div>
+            <div>
+                <canvas id="game-field" class="canvas"></canvas>
+            </div>
         </div>
         <svg id="legendBoard"></svg>
         <button id="start-button">Start</button>
         <button id="high-score-button">High Score</button>
         <button id="back-button">Back</button>
+        <div id="selector"></div>
 
         <div id="high-score">
-            Top players:
+            <h1>Best score:</h1>
         </div>
     </div>
+
+    <script>
+        var playerName = localStorage.name;
+        var playerScore = localStorage.score;
+        var highScore = $('#high-score');
+
+        highScore.append("<h1>" + playerName + "</h1>");
+        highScore.append("<h1>" + playerScore + "</h1>");
+    </script>
 
     <script src="js/game-factory.js"></script>
     <script src="js/game-engine.js"></script>
