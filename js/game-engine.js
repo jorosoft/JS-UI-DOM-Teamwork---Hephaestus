@@ -19,6 +19,9 @@ backgroundImg.src = "images/space.jpg";
 var shipImg = new Image();
 shipImg.src = "images/ship.png";
 
+var shipIsHitImg = new Image();
+shipIsHitImg.src = "images/shipIsHit.png";
+
 var enemyImgOne = new Image();
 enemyImgOne.src = "images/enemy1.gif";
 
@@ -412,10 +415,9 @@ function enemyAttackHandler(projectile, enemy, projectileImg, projectileSizeX, p
         } else {
             if (projectileHitInfo.isHit === true) {
                 player.life -= enemy.attack;
-
+                drawShipIsHit(player.positionX, player.positionY);
                 drawScoreBoard(player.name, player.score, player.life);
                 ctxGameField.clearRect(projectile.x, projectile.y + 5, projectileSizeX + 2, projectuleSizeY + 1);
-                ctxGameField.drawImage(shipImg, player.positionX, player.positionY, 50, 20);
                 if (player.life <= 0) {
                     gameOver(projectileHitInfo.positionX, projectileHitInfo.positionY);
                 }
@@ -470,6 +472,27 @@ function drawExplosion(x, y) {
 
     }
     Animate();
+}
+
+function drawShipIsHit(x, y) {
+    var count = 0;
+    function AnimateShipIsHit() {
+
+
+            ctxGameField.clearRect(x, y, 50, 20);
+            ctxGameField.drawImage(shipIsHitImg, x, y, 50, 20);
+            if (count == 4) {
+                ctxGameField.clearRect(x, y, 50, 20);
+                ctxGameField.drawImage(shipImg, player.positionX, player.positionY, 50, 20);
+                window.cancelAnimationFrame(AnimateShipIsHit);
+            }
+            else
+            {
+                count++;
+                window.requestAnimationFrame(AnimateShipIsHit);
+            }
+    }
+    AnimateShipIsHit();
 }
 
 function moveShip(player, dir) {
