@@ -133,15 +133,15 @@ function enemyType() {
         enemyOne = factoryInit.getEnemy(5, 20, 50, 250, randomPosition, typeofEnemy, 20, 20);
         moveEnemy(enemyOne, enemyOne.width, enemyOne.height, enemyImgOne);
         enemyOne.enemyType = 1;
-        return enemyOne;
         enemyCount += 1;
+        return enemyOne;
 
     } else if (typeofEnemy === 2) {
         enemyTwo = factoryInit.getEnemy(7, 3, 100, 250, randomPosition, typeofEnemy, 45, 40);
         moveEnemy(enemyTwo, enemyTwo.width, enemyTwo.height, enemyImgTwo);
         enemyTwo.enemyType = 2;
-        return enemyTwo;
         enemyCount += 1;
+        return enemyTwo;
 
     } else if (enemyCount === 50) {
         boss = factoryInit.getEnemy(100, 30, 5000, 250, 50, 4, 70, 70);
@@ -150,8 +150,8 @@ function enemyType() {
         enemyThree = factoryInit.getEnemy(10, 1, 150, 250, randomPosition, typeofEnemy, 50, 20);
         moveEnemy(enemyThree, enemyThree.width, enemyThree.height, enemyImgThree);
         enemyThree.enemyType = 3;
-        return enemyThree;
         enemyCount += 1;
+        return enemyThree;
     }
 }
 
@@ -170,8 +170,9 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
             switch (enemy.enemyType) {
                 case 1:
                     ctxGameField.clearRect(enemy.positionX, enemy.positionY + 1, 22, 9);
-                    drawShip(image, enemy.positionX, enemy.positionY, sizeX, sizeY);
+                    ctxGameField.clearRect(enemy.positionX, enemy.positionY, enemy.width,enemy.height);
                     enemy.positionX -= step;
+                    drawShip(image, enemy.positionX, enemy.positionY, sizeX, sizeY);
 
                     speed = 0;
                     if (attackRatio % 50 === 0) {
@@ -182,9 +183,10 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
                     break;
                 case 2:
                     ctxGameField.clearRect(enemy.positionX, enemy.positionY + 1, 22, 9);
-                    drawShip(image, enemy.positionX, enemy.positionY, sizeX, sizeY);
+                    ctxGameField.clearRect(enemy.positionX, enemy.positionY, enemy.width,enemy.height);
                     enemy.positionX -= step;
                     enemy.positionY += count;
+                    drawShip(image, enemy.positionX, enemy.positionY, sizeX, sizeY);
 
                     count += index;
                     if (count === 10 || count === -10) {
@@ -196,9 +198,10 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
                     //enemyAttackHandler(newProjectile, enemy);
                     break;
                 case 3:
-                    ctxGameField.clearRect(enemy.positionX, enemy.positionY + 1, 22, 9);
-                    drawShip(image, enemy.positionX, enemy.positionY, sizeX, sizeY);
+                    ctxGameField.clearRect(enemy.positionX, enemy.positionY, 22, 9);
+                    ctxGameField.clearRect(enemy.positionX, enemy.positionY, enemy.width,enemy.height);
                     enemy.positionX -= step;
+                    drawShip(image, enemy.positionX, enemy.positionY, sizeX, sizeY);
 
                     speed = 100
                     //var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY, enemy);
@@ -325,6 +328,7 @@ function playerAttackHandler(projectile) {
                 drawScoreBoard(player.name, player.score, player.life);
                 if (enemies[projectileHitInfo.index].life <= 0) {
                     drawExplosion(projectileHitInfo.positionX, projectileHitInfo.positionY);
+                    ctxGameField.clearRect(enemies[projectileHitInfo.index].positionX,enemies[projectileHitInfo.index].positionY,enemies[projectileHitInfo.index].width,enemies[projectileHitInfo.index].height);
                     player.score += enemies[projectileHitInfo.index].addScoreToPlayer;
                     drawScoreBoard(player.name, player.score, player.life);
                     enemies.splice(projectileHitInfo.index, 1);
