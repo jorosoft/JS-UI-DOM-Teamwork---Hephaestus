@@ -43,6 +43,12 @@ projectileEnemyTwoImg.src = "images/projectile2.png";
 var projectileEemyThreeImg = new Image();
 projectileEemyThreeImg.src = "images/projectile3.png";
 
+var startImage = new Image();
+startImage.src = "images/start.png"
+startImage.onload = function () {
+    ctxBackground.drawImage(startImage,0,0,300,200);
+}
+
 if (!Array.prototype.remove) {
     Array.prototype.remove = function (val, all) {
         var i, removedItems = [];
@@ -70,7 +76,7 @@ var canvasTemp = document.createElement("canvas"),
 
 function loadImage() {
     imgWidth = backgroundImg.width,
-    imgHeight = backgroundImg.height;
+        imgHeight = backgroundImg.height;
     canvasTemp.width = imgWidth;
     canvasTemp.height = imgHeight;
     render();
@@ -89,12 +95,16 @@ function render() {
 
     setTimeout(function () { render(); }, 20);
 }
-
-window.onload = function () {
-    drawShip(shipImg, player.positionX, player.positionY, 50, 20);
-    players.push(player);
-    multipleEnemies();
-    loadImage();
+var flag = false;
+function startLala() {
+    if (flag === false) {
+        drawShip(shipImg, player.positionX, player.positionY, 50, 20);
+        players.push(player);
+        multipleEnemies();
+        loadImage();
+        executeCommand();
+    }
+    flag = true;
 }
 
 function multipleEnemies() {
@@ -112,13 +122,6 @@ function multipleEnemies() {
         window.requestAnimationFrame(invokeEnemy);
     }
     invokeEnemy();
-}
-
-backgroundImg.onload = function () {
-    // create pattern
-    var ptrn = ctxBackground.createPattern(backgroundImg, 'repeat'); // Create a pattern with this image, and set it to "repeat".
-    ctxBackground.fillStyle = ptrn;
-    ctxBackground.fillRect(0, 0, 960, 640); // context.fillRect(x, y, width, height);
 }
 
 enemyCount = 0;
@@ -229,8 +232,6 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
     }
     window.requestAnimationFrame(performEnemyMove);
 }
-
-executeCommand();
 
 function executeCommand() {
     document.body.addEventListener('keydown', function (ev) {
@@ -444,7 +445,7 @@ function moveShip(args, dir) {
 
 function enemyProjectileHit(player, projectile) {
     if (projectile.x < player.positionX + 50 && projectile.x + 25 > player.positionX &&
-            projectile.y < player.positionY + 15 && projectile.y + 15 > player.positionY) {
+        projectile.y < player.positionY + 15 && projectile.y + 15 > player.positionY) {
         return {
             positionX: player.positionX,
             positionY: player.positionY,

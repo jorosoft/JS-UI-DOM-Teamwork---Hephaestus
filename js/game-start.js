@@ -5,8 +5,8 @@ var backButton = document.getElementById("back-button");
 var HighScoreButton = document.getElementById("high-score-button");
 
 function startGame() {
-    gameField.style.display = "block"
-   
+   gameField.style.display = "block";
+   startLala();
 }
 
 function showHighScore() {
