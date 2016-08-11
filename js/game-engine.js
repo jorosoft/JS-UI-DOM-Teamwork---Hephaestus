@@ -201,6 +201,7 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
                         index *= -1;
                     }
                     speed = 100;
+<<<<<<< HEAD
 
                     if (attackRatio2 % 35 === 0) {
                         var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY, enemy);
@@ -208,6 +209,13 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
                     }
 
                     attackRatio2 += 1;
+=======
+                    if (count > 5 || count < -5)
+                    {
+                    var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY, enemy);
+                    enemyAttackHandler(newProjectile, enemy);
+                    }
+>>>>>>> origin/master
                     break;
                 case 3:
                     ctxGameField.clearRect(enemy.positionX, enemy.positionY, 57, 16);
@@ -216,6 +224,7 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
                     drawShip(image, enemy.positionX, enemy.positionY, sizeX, sizeY);
 
                     speed = 100
+<<<<<<< HEAD
 
                     if (attackRatio3 % 40 === 0) {
                         var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY, enemy);
@@ -223,6 +232,10 @@ function moveEnemy(enemy, sizeX, sizeY, image) {
                     }
 
                     attackRatio3 += 1;
+=======
+                    var newProjectile = new projectile(enemy.positionX - 20, enemy.positionY, enemy);
+                    enemyAttackHandler(newProjectile, enemy);
+>>>>>>> origin/master
                     break;
                 default:
                     break;
@@ -376,6 +389,7 @@ function enemyAttackHandler(projectile, enemy, projectileImg, projectileSizeX, p
                 ctxGameField.clearRect(projectile.x, projectile.y + 5, projectileSizeX + 2, projectuleSizeY + 1);
                 ctxGameField.drawImage(shipImg, player.positionX, player.positionY, 50, 20);
                 if (player.life <= 0) {
+                    ctxGameField.clearRect(player.positionX,player.positionY,50,20);
                     gameOver(projectileHitInfo.positionX, projectileHitInfo.positionY);
                 }
                 window.cancelAnimationFrame(performAttack);
@@ -450,12 +464,21 @@ function moveShip(args, dir) {
 function enemyProjectileHit(player, projectile) {
     if (projectile.x < player.positionX + 50 && projectile.x + 25 > player.positionX &&
             projectile.y < player.positionY + 15 && projectile.y + 15 > player.positionY) {
+<<<<<<< HEAD
         return {
             positionX: player.positionX,
             positionY: player.positionY,
             isHit: true
         };
     }
+=======
+            return {
+                positionX: player.positionX,
+                positionY: player.positionY,
+                isHit: true
+            };
+        }
+>>>>>>> origin/master
     return false;
 }
 
