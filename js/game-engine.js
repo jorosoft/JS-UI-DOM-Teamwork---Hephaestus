@@ -35,14 +35,26 @@ shipIsHitImg.src = "images/shipIsHit.png";
 var enemyImgOne = new Image();
 enemyImgOne.src = "images/enemy1.gif";
 
+var enemyImgOneIsHit = new Image();
+enemyImgOneIsHit.src = "images/enemy1IsHit.gif";
+
 var enemyImgTwo = new Image();
 enemyImgTwo.src = "images/enemy2.png";
+
+var enemyImgTwoIsHit = new Image();
+enemyImgTwoIsHit.src = "images/enemy2IsHit.png";
 
 var enemyImgThree = new Image();
 enemyImgThree.src = "images/enemy3.png";
 
+var enemyImgThreeIsHit = new Image();
+enemyImgThreeIsHit.src = "images/enemy3IsHit.png";
+
 var bossImg = new Image();
-bossImg.src = "images/boss.png"
+bossImg.src = "images/boss.png";
+
+var bossImgIsHit = new Image();
+bossImgIsHit.src = "images/bossIsHit.png";
 
 var bullet = new Image();
 bullet.src = "images/bullet.png";
@@ -147,7 +159,7 @@ backgroundImg.onload = function () {
 function enemyType() {
     let typeofEnemy,
         randomPosition = Math.floor(Math.random() * (100 - 1 + 1)) + 1;
-    if (enemyCount === 2) {
+    if (enemyCount === 15) {
         typeofEnemy = 4;
     } else {
         typeofEnemy = Math.floor(Math.random() * (3 - 1 + 1)) + 1;
@@ -378,6 +390,7 @@ function playerAttackHandler(projectile) {
         } else {
             if (projectileHitInfo.isHit === true || projectile.positionX > gameField.width) {
                 enemies[projectileHitInfo.index].life -= player.attack;
+                enemyIsHitHandler(enemies[projectileHitInfo.index].enemyType,enemies[projectileHitInfo.index].positionX,enemies[projectileHitInfo.index].positionY);
                 drawScoreBoard(player.name, player.score, player.life);
                 if (enemies[projectileHitInfo.index].life <= 0) {
                     if (enemies[projectileHitInfo.index].enemyType === 4) {
@@ -415,7 +428,7 @@ function enemyAttackHandler(projectile, enemy, projectileImg, projectileSizeX, p
             if (projectileHitInfo.isHit === true) {
                 player.life -= enemy.attack;
                 drawScoreBoard(player.name, player.score, player.life);
-                drawShipIsHit(player.positionX, player.positionY);
+                drawPlayerShipIsHit(player.positionX, player.positionY,shipImg,shipIsHitImg,50,20);
                 ctxGameField.clearRect(projectile.x, projectile.y + 5, projectileSizeX + 2, projectuleSizeY + 1);
                 if (player.life <= 0) {
                     gameOver(projectileHitInfo.positionX, projectileHitInfo.positionY, gameOverSadImg);
@@ -473,43 +486,44 @@ function drawExplosion(x, y) {
     Animate();
 }
 
-function drawShipIsHit(x, y) {
+function drawPlayerShipIsHit(x,y,imgNormal,imgIsHit,sizeX,sizeY) {
     let count = 0;
     function AnimateShipIsHit() {
 
-
-        ctxGameField.clearRect(x, y, 50, 20);
-        ctxGameField.drawImage(shipIsHitImg, x, y, 50, 20);
+        ctxGameField.clearRect(x-10,y-10,sizeX+20,sizeY+20);
+        ctxGameField.drawImage(imgIsHit,x,y,sizeX,sizeY);
         if (count == 4) {
-            ctxGameField.clearRect(x, y, 50, 20);
-            ctxGameField.drawImage(shipImg, player.positionX, player.positionY, 50, 20);
+            ctxGameField.clearRect(x-10,y-10,sizeX+20,sizeY+20);
+            ctxGameField.drawImage(imgNormal,x,y,sizeX,sizeY);
             window.cancelAnimationFrame(AnimateShipIsHit);
         }
         else {
             count++;
             window.requestAnimationFrame(AnimateShipIsHit);
         }
-
-        let count = 0;
-
-        function AnimateShipIsHit() {
-
-
-            ctxGameField.clearRect(x, y, 50, 20);
-            ctxGameField.drawImage(shipIsHitImg, x, y, 50, 20);
-            if (count == 4) {
-                ctxGameField.clearRect(x, y, 50, 20);
-                ctxGameField.drawImage(shipImg, player.positionX, player.positionY, 50, 20);
-                window.cancelAnimationFrame(AnimateShipIsHit);
-            }
-            else {
-                count++;
-                window.requestAnimationFrame(AnimateShipIsHit);
-            }
-        }
-        AnimateShipIsHit();
     }
+    AnimateShipIsHit();
 }
+
+function drawEnemyShipIsHit(x,y,imgNormal,imgIsHit,sizeX,sizeY) {
+    let count = 0;
+    function AnimateShipIsHit() {
+
+        ctxGameField.clearRect(x-10,y-10,sizeX+20,sizeY+20);
+        ctxGameField.drawImage(imgIsHit,x,y,sizeX,sizeY);
+        if (count == 4) {
+            ctxGameField.clearRect(x-10,y-10,sizeX+20,sizeY+20);
+            //ctxGameField.drawImage(imgNormal,x,y,sizeX,sizeY);
+            window.cancelAnimationFrame(AnimateShipIsHit);
+        }
+        else {
+            count++;
+            window.requestAnimationFrame(AnimateShipIsHit);
+        }
+    }
+    AnimateShipIsHit();
+}
+
 function moveShip(player, dir) {
     switch (dir) {
         case "left":
@@ -531,7 +545,7 @@ function moveShip(player, dir) {
 
 function enemyProjectileHit(player, projectile) {
     if (projectile.x < player.positionX + 50 && projectile.x + 25 > player.positionX &&
-        projectile.y < player.positionY + 15 && projectile.y + 15 > player.positionY) {
+        projectile.y < player.positionY + 17 && projectile.y + 17 > player.positionY) {
         return {
             positionX: player.positionX,
             positionY: player.positionY,
@@ -539,6 +553,24 @@ function enemyProjectileHit(player, projectile) {
         };
     }
     return false;
+}
+
+function enemyIsHitHandler(enemyType,x,y){
+    switch(enemyType){
+        case 1:
+            drawEnemyShipIsHit(x,y,enemyImgOne,enemyImgOneIsHit,enemyOne.width,enemyOne.height);
+            console.log("tyk sym");
+            break;
+        case 2:
+            drawEnemyShipIsHit(x,y,enemyImgTwo,enemyImgTwoIsHit,enemyTwo.width,enemyTwo.height);
+            break;
+        case 3:
+            drawEnemyShipIsHit(x,y,enemyImgThree,enemyImgThreeIsHit,enemyThree.width,enemyThree.height);
+            break;
+        case 4:
+            drawEnemyShipIsHit(x,y,bossImg,bossImgIsHit,boss.width,boss.height);
+            break;
+    }
 }
 
 //For ship can't go outside on canvas.
